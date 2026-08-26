@@ -1,0 +1,25 @@
+# Lean build products
+formal/.lake/
+formal/lake-manifest.json
+**/*.olean
+**/*.ilean
+
+# Python caches
+**/__pycache__/
+*.pyc
+
+# TeX build products (the stable PDF under output/pdf is tracked)
+paper/*.aux
+paper/*.blg
+paper/*.log
+paper/*.out
+paper/*.pdf
+
+# Rebuildable staging directories
+output/arxiv/staging/
+output/reviewer/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+*~

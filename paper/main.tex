@@ -1,0 +1,2822 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\cA}{\mathcal A}
+\newcommand{\cB}{\mathcal B}
+\newcommand{\cC}{\mathcal C}
+\newcommand{\cY}{\mathcal Y}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\F}{\mathbb F}
+\newcommand{\1}{\mathbf 1}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\rect}{\operatorname{rect}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\Dcc}{\operatorname{D}}
+
+\title{Logarithmic Communication for Low-Degree Slices and Product Domains\\
+with Spectral--Lattice Stability}
+\author{Anonymous draft}
+\date{August 26, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We study the adjacent two-value cross-intersection problem that occurs in an
+equivalent formulation of the Log-Rank Conjecture.  We prove a
+spectral--lattice rectangle theorem for an arbitrary sparse right family: a
+covariance gap away from a real defect space controls the Hamming distance of
+every opposite row from a Boolean template, while low covariance on an
+integer generating set yields a large joint atom by a discrete entropy
+argument.  The resulting rectangle bound depends on an exact Boolean tube
+radius and on the entropy of integer generator statistics, but has no
+exponential dependence on the dimension of the defect space or on its number
+of Boolean points.
+
+We also prove an atomic product transfer theorem.  If every Boolean
+degree-one function on each factor is an atom or its complement, and atom
+families have polynomial growth in centered rank with exponent $\alpha$, then
+every row-degree-one Boolean matrix on the Cartesian product has deterministic
+communication complexity at most $\alpha\log_2(\rank M+1)+O(1)$.  Conversely,
+a degree-one selector partition embeds arbitrary Boolean matrices, giving an
+abstract tractable/universal dichotomy.
+
+In a different direction, let a Boolean matrix have the complete Johnson
+slice $\binom{[n]}k$ as its column domain, and suppose every row has slice
+degree at most $s$.  Combining slice query-complexity bounds with rank pooling
+and a new symmetric-tree canonicalization, we prove
+\[
+ \Dcc(M)=O\bigl(s^8\log(\rank M+1)+s^{16}\bigr)
+\]
+whenever $\min(k,n-k)\ge144s^4$.  Thus the
+Log-Rank Conjecture holds throughout this class even when
+$s=\operatorname{polylog}(\rank M)$.  The same bound holds on the full cube
+without a layer-depth hypothesis, with a sharper dependence on $s$; in the
+deeper regime $\min(k,n-k)\ge C^s$, we also obtain the sharper bound
+$O(s^3(\log(\rank M+1)+s))$.  At the opposite boundary $k\le s$, every
+Boolean function on the layer already has degree at most $s$, so arbitrary
+Boolean matrices occur.  Qualitatively, the deep-layer hypothesis can be
+replaced by the sharp junta threshold $\min(k,n-k)\ge2s$: for every fixed
+$s$, we obtain $\Dcc(M)=O_s(\log(\rank M+1))$.
+More generally, if every row on a symmetric or complete-product coordinate
+domain has bounded-answer query depth $q$, then
+\[
+ \Dcc(M)\le q\bigl(\lceil\log_2(\rank M+1)\rceil+
+ (q+1)\lceil\log_2Q\rceil\bigr),
+\]
+where $Q$ bounds the number of answers to a query.
+The same bounded-answer transfer proves
+$O_Q(s^8\log(\rank M+1)+s^{16})$ communication for degree-$s$ rows on
+complete product alphabets of size at most $Q$, and on $Q$-color multislices
+whose minimum color multiplicity is at least $216s^4$.
+An unisolvent-restriction theorem extends all these protocols to sparse
+column subsets.  In particular, a uniform random
+$O(\binom ns\log\binom ns)$-column subfamily of a Johnson layer is, with high
+probability, simultaneously sufficient for every degree-$s$ Boolean row
+family.  Projection-DPP volume sampling removes the logarithmic factor and
+selects exactly the information-theoretic minimum $\binom ns$ columns with
+probability one; for fixed $s$ in a middle layer this is exponentially sparse.
+The same minimal projection-DPP construction applies to bounded-alphabet
+product degree spaces, whose dimension is $O_{Q,s}(n^s)$ against an ambient
+domain of size at least $2^n$.
+At degree one, twice-degree unisolvence removes any ambient-extension
+assumption: every fixed degree-two-unisolvent Johnson column family
+simultaneously satisfies the adjacent-two-value theorem for every row family.
+Such a family exists with exactly $\binom n2$ columns, for example in the
+explicit radius-two cross of Theorem~\ref{thm:explicit-cross}; projection-DPP
+sampling gives an invariant alternative.  It satisfies
+\[
+ \Dcc(M)\le\lceil\log_2(\rank M+1)\rceil+1,
+ \qquad \rect(M)\ge1/[4(\rank M+1)].
+\]
+On every fixed balanced range $\beta n\le k\le(1-\beta)n$, a
+quadratic-scale hypergeometric two-point escape theorem reduces the universal
+column count further to $O_\beta(n)$, with the same bounds.  A strengthened construction needs no
+protected rank anchor: the same random column family is simultaneously a
+two-value detector and a robust degree-one interpolation set.  It retains the
+theorem after adversarial deletion of a $\beta^2/10$-fraction of \emph{all}
+its columns.
+The underlying hypergeometric escape constant is exactly $2/5$ after
+quadratic normalization, with unique equality at the central $J(6,3)$
+three-marked distribution.
+There is also a deterministic spectral version: any $k$-uniform column
+family whose empirical incidence covariance has eigenvalue greater than
+$n/[8(n-2)]$ on $\mathbf1^\perp$ satisfies the same logarithmic protocol.
+Balanced $2$-designs meet this condition in a broad parameter range; the
+Sylvester--Hadamard construction gives an explicit family of exactly $n$
+columns for every $n=2^t-1$, $t\ge3$.
+
+As a concrete application, partition $[d]$ into arbitrary blocks and let the
+right family choose a fixed number $k_i$ from each block, where
+$2\le k_i\le n_i-2$.  This deterministic family can have exponentially small
+relative density in the global layer and is generally not a complete
+affine-code section.  Nevertheless every adjacent two-value opposite family
+has the exact row classification: every nonconstant row is a coordinate
+function or its complement.  This gives a monochromatic rectangle of relative
+density at least $1/[4(d+1)]$ and the rank-sensitive communication bound
+$\Dcc(M)\le\lceil\log_2(\rank M+1)\rceil+4$, which is optimal up to an
+additive constant.
+We also prove a robust transfer from a nearby rational subspace, with explicit
+projector, Boolean-margin, and integer-height losses.  For layers at the
+boundary $k_i=1$ or $n_i-1$, arbitrary Boolean matrices can
+be embedded, so the interior hypothesis marks a sharp barrier.  More general
+blockwise Johnson layers admit a bound governed by an explicit weighted
+Boolean tube radius.  We also prove a logarithmic rank-sensitive protocol for
+products of interior multislices over a bounded alphabet, with the same sharp
+count-one boundary.  These are restricted-column results and do not solve the
+general Log-Rank Conjecture.
+\end{abstract}
+
+\section{Introduction}
+
+The Log-Rank Conjecture asks whether the deterministic communication
+complexity of a Boolean matrix is polynomially bounded by the logarithm of
+its real rank.  Equivalently, it predicts a quasipolynomial relation between
+real rank and the partition number of a Boolean matrix.  The strongest known
+general bound gives a monochromatic rectangle of relative density
+$2^{-O(\sqrt r)}$ in every rank-$r$ Boolean matrix
+\cite{SudakovTomon,HambardzumyanLovettShirley}.
+
+Hambardzumyan, Lovett, and Shirley recently showed that Log-Rank is
+equivalent to a relative rectangle conjecture for two set families whose
+cross-intersections take two adjacent values
+\cite{HambardzumyanLovettShirley}.  In that formulation one has
+families $\cA,\cB\subseteq 2^{[d]}$ and an integer $a$ such that
+\begin{equation}\label{eq:two-level}
+ |A\cap B|\in\{a,a+1\}
+ \qquad(A\in\cA,\ B\in\cB).
+\end{equation}
+The Boolean matrix
+\begin{equation}\label{eq:matrix}
+ M_{A,B}=\1_{\{|A\cap B|=a+1\}}
+\end{equation}
+has real rank at most $d+1$.  The conjecture asks for a monochromatic
+rectangle retaining a $2^{-\operatorname{polylog}d}$ fraction of all
+cross-pairs.
+
+The problem remains difficult precisely when both families are sparse.
+Classical and modern anti-concentration theorems control dense cube families
+or independent coordinates \cite{Erdos,RaoYehudayoff,TaoVu,NguyenVu}; the
+binary-scalar-product theorems of Kupavskii--Weltge and
+Kupavskii--Tsarev control absolute products of full-span configurations
+\cite{KupavskiiWeltge,KupavskiiTsarev}.  Neither type of conclusion is a
+relative rectangle theorem for an arbitrarily sparse prescribed column
+family.
+
+Filmus--Ihringer classify Boolean degree-one functions on an individual
+interior Johnson scheme as constants, dictators, and their complements
+\cite{FilmusIhringer}.  Our local interval argument recovers this set-case
+fact.  The contributions here are the product assembly, the cross-intersection
+interpretation, the rank-sensitive protocol and sharp boundary universality,
+and the spectral--lattice extension.
+
+Our first contribution is a general sufficient condition formulated through
+the covariance of the right family and the arithmetic geometry of a
+low-mode subspace.  It is useful even when that subspace has dimension
+linear in $d$.  Our second contribution is a particularly clean natural
+application.  A third contribution is a general product transfer principle
+that converts factorwise degree-one classifications and atom-rank growth into
+Log-Rank protocols.  A fourth is a rank-pooling principle for low-degree
+Boolean rows: a row-space basis compresses the common coordinate universe,
+after which low-depth query trees become rank-sensitive communication
+protocols.  A fifth is an anchor-free sparse transfer: one linear-size sample
+simultaneously detects every forbidden two-value row and remains degree-one
+unisolvent after adversarial column deletion.  A sixth replaces randomness
+entirely by a deterministic empirical covariance gap and includes explicit
+linear-size Hadamard-design columns.
+
+\begin{theorem}[Interior product-Johnson theorem; informal]\label{thm:intro-product}
+Partition $[d]$ into blocks of sizes $n_i$, and let $\cY$ consist of all sets
+containing exactly $k_i$ points from block $i$, where
+$2\le k_i\le n_i-2$.  If an arbitrary family $\cA$ satisfies
+\eqref{eq:two-level} with $\cY$, then the
+matrix \eqref{eq:matrix} satisfies
+\[
+ \rank_{\R}M\le d+1,
+ \qquad
+ \rect(M)\ge\frac1{4(d+1)},
+ \qquad
+ \Dcc(M)\le\lceil\log_2(\rank M+1)\rceil+4.
+\]
+\end{theorem}
+
+\begin{theorem}[Anchor-free sparse HLS; informal]
+\label{thm:intro-anchor-free}
+Fix $0<\beta\le1/2$.  On every layer
+$\beta n\le k\le(1-\beta)n$, a uniform random family of
+$O_\beta(n+\log(1/\delta))$ columns has, with probability at least
+$1-\delta$, the following simultaneous property.  After arbitrary deletion
+of at most a $\beta^2/10$-fraction of all sampled columns, every
+adjacent-two-value set-row matrix on the retained family satisfies
+\[
+ \Dcc(M)\le\lceil\log_2(\rank_{\R}M+1)\rceil+1,
+ \qquad
+ \rect(M)\ge\frac1{4(\rank_{\R}M+1)}.
+\]
+No subset of columns is designated as a protected rank anchor.
+\end{theorem}
+
+\begin{theorem}[Deterministic spectral sparse HLS; informal]
+\label{thm:intro-spectral-sparse}
+Let $Y\subseteq\binom{[n]}k$ be nonempty and let $\Sigma_Y$ be the empirical
+covariance matrix of its incidence vectors.  If, for every
+$v\perp\mathbf1$,
+\[
+ v^\top\Sigma_Yv\ge\lambda\|v\|_2^2,
+ \qquad
+ \lambda>\frac{n}{8(n-2)},
+\]
+then every adjacent-two-value set-row matrix on $Y$ satisfies
+\[
+ \Dcc(M)\le\lceil\log_2(\rank_{\R}M+1)\rceil+1,
+ \qquad
+ \rect(M)\ge\frac1{4(\rank_{\R}M+1)}.
+\]
+This is a deterministic condition on the prescribed column family.  In
+particular, explicit Sylvester--Hadamard designs give $|Y|=n$ on the infinite
+sequence $n=2^t-1$.
+\end{theorem}
+
+\begin{theorem}[Low-degree slice theorem; informal]
+\label{thm:intro-low-degree}
+Let $M$ be a Boolean matrix whose columns are indexed by $\binom{[n]}k$, and
+suppose every row has slice degree at most $s\ge1$.  If
+$\min(k,n-k)\ge144s^4$ and $r=\rank_{\R}M$, then, with $q=5184s^8$,
+\[
+ \Dcc(M)\le
+ q\bigl(\lceil\log_2(r+1)\rceil+q+1\bigr).
+\]
+In particular, the Log-Rank Conjecture holds for this class whenever
+$s=\operatorname{polylog}(r+1)$.
+For each fixed $s$, the qualitative conclusion
+$\Dcc(M)=O_s(\log(r+1))$ already holds under the sharp junta condition
+$\min(k,n-k)\ge2s$.
+\end{theorem}
+
+The interior condition is sharp in a complexity-theoretic sense.  If a block
+with $k_i=1$ is allowed, its columns are singletons and arbitrary Boolean
+matrices can be encoded by taking each row to be its support.  Thus extending
+the logarithmic theorem to the boundary would include the general Log-Rank
+Conjecture.
+
+Using the Filmus--Ihringer classification on multislices, the same product
+and rank method gives a logarithmic protocol for products of multislices in
+which every color has multiplicity at least two.  A color of multiplicity one
+again embeds arbitrary Boolean matrices.
+
+For fixed block parameters and a growing number of blocks, $\cY$ has exponentially
+small relative density in the global middle layer.  It is deterministic and
+is generally not the intersection of that layer with a binary affine coset.
+Thus Theorem~\ref{thm:intro-product} is not a dense-subset, random-thinning,
+or complete-affine-section corollary.
+
+The proof has two complementary descriptions.  An elementary blockwise
+hypergeometric variance computation shows that every row is within one
+coordinate of a union of whole blocks.  More conceptually, the covariance
+vanishes on the span of block indicators and has a constant gap on its
+orthogonal complement; the Boolean tube at the two-point variance threshold
+has Hamming radius one.
+
+Our general theorem replaces the block span by an arbitrary integer-generated
+real subspace.  The main parameters are an exact Boolean tube radius and the
+entropy of the integer generator statistics.  A perturbative version permits
+the true low-mode space to be merely close to the rational one.
+
+\paragraph{Claim boundary.}
+All results in this paper are restricted theorems.  They do not improve the
+best known bound for every rank-$r$ Boolean matrix.  The product-Johnson class
+does admit a full logarithmic protocol; the general spectral--lattice theorem
+is only a one-rectangle result.  The publication-level novelty comparison is
+still subject to independent expert verification.
+
+\section{Two-level matrices and rectangle density}
+
+For nonempty finite sets $X,Y$ and $M\in\{0,1\}^{X\times Y}$, define
+\[
+ \rect(M)=\max_{X_0\times Y_0\text{ monochromatic}}
+ \frac{|X_0|}{|X|}\frac{|Y_0|}{|Y|}.
+\]
+Write $\Dcc(M)$ for deterministic communication complexity.  We use the
+one-party-output convention; requiring both parties to output changes all
+bounds below by at most one bit.
+
+Under \eqref{eq:two-level},
+\begin{equation}\label{eq:rank-factorization}
+ M_{A,B}=|A\cap B|-a
+ =-a+\sum_{j=1}^d\1_{\{j\in A\}}\1_{\{j\in B\}}.
+\end{equation}
+Hence
+\begin{equation}\label{eq:rank-bound}
+ \rank_{\R}M\le d+1.
+\end{equation}
+
+We repeatedly use the following elementary fact.
+
+\begin{lemma}[Two-point variance]\label{lem:two-point-var}
+If a real random variable is supported on two consecutive integers, then its
+variance is at most $1/4$.
+\end{lemma}
+
+\begin{proof}
+After translation it is Bernoulli with parameter $p$, and its variance is
+$p(1-p)\le1/4$.
+\end{proof}
+
+\section{An atomic product transfer theorem}
+
+We isolate the communication argument from the particular combinatorial
+domains used later.  Let $\Omega_i$ be finite sets and let
+$L_i\subseteq\R^{\Omega_i}$ be real linear spaces containing the constant
+function.  On $\Omega=\prod_i\Omega_i$, define the additive degree-one space
+\[
+ L=\left\{c+\sum_i f_i(x_i):c\in\R,\ f_i\in L_i\right\}.
+\]
+
+For each factor, let $\mathcal Q_i$ be a set of nonconstant Boolean atoms,
+with one representative from each complementary pair.  For a nonempty
+finite $\mathcal F\subseteq\mathcal Q_i$, define its centered rank
+\[
+ \rho_i(\mathcal F)
+ =\dim\operatorname{span}(\{1\}\cup\mathcal F)-1.
+\]
+
+\begin{theorem}[Atomic product transfer]\label{thm:atomic-transfer}
+Suppose the following hold for fixed $C\ge1$ and $\alpha\ge1$:
+\begin{enumerate}
+\item every nonconstant Boolean function in $L_i$ is an atom in
+      $\mathcal Q_i$ or its complement;
+\item every nonempty finite $\mathcal F\subseteq\mathcal Q_i$ satisfies
+      $|\mathcal F|\le C\rho_i(\mathcal F)^\alpha$.
+\end{enumerate}
+Then every Boolean matrix $M$ with column set $\Omega$ and rows in $L$
+satisfies
+\[
+ \Dcc(M)\le
+ \left\lceil\log_2\bigl(2C(\rank_{\R}M+1)^\alpha+2\bigr)\right\rceil.
+\]
+In particular, $\Dcc(M)\le\alpha\log_2(\rank M+1)+O(\log C+1)$.
+\end{theorem}
+
+\begin{proof}
+Write a Boolean row as $f=c+\sum_i f_i(x_i)$.  Fixing all factors except
+$i$ shows that the range of every nonconstant $f_i$ has exactly two values.
+If two factors were nonconstant, the sum of their two two-point ranges would
+contain at least three values, contradicting Booleanity.  Thus every
+nonconstant row is a lifted atom from one factor or its complement.
+
+Let $\mathcal F_i$ be the positive atoms used by the matrix rows and put
+$K=\sum_i|\mathcal F_i|$.  Replacing complements by positive atoms enlarges
+the row span by at most the constant function.  Hence all lifted atoms lie in
+a space whose quotient by constants has dimension at most
+$r=\rank_{\R}M$.
+
+The centered one-factor spaces form a direct sum on the product: if
+$\sum_i g_i(x_i)$ is constant, varying one coordinate shows that every
+$g_i$ is constant.  Consequently
+\[
+ \sum_i\rho_i(\mathcal F_i)\le r.
+\]
+The atom-growth hypothesis and convexity give
+\[
+ K\le C\sum_i\rho_i(\mathcal F_i)^\alpha
+ \le C r^\alpha.
+\]
+Alice sends one of two constant messages, or the used atom index and a
+complement bit.  There are at most $2K+2$ messages, proving the theorem.
+\end{proof}
+
+The polynomial atom-growth hypothesis has a natural opposite obstruction.
+
+\begin{proposition}[Selector universality]\label{prop:selector}
+Suppose one factor contains Boolean degree-one functions
+$q_1,\ldots,q_N$ satisfying
+\[
+ q_iq_j=0\ (i\ne j),
+ \qquad
+ \sum_{j=1}^Nq_j=1,
+\]
+and every selector value $j$ occurs on the domain.  Then row-degree-one
+Boolean matrices on that factor contain every Boolean matrix with $N$
+column types.
+\end{proposition}
+
+\begin{proof}
+Choose one domain point $x_j$ with $q_j(x_j)=1$.  For an arbitrary Boolean
+row vector $v\in\{0,1\}^N$, the degree-one function
+\[
+ f_v=\sum_{j:v_j=1}q_j
+\]
+is Boolean and satisfies $f_v(x_j)=v_j$.  Applying this construction to every
+row embeds the prescribed matrix.  Extra domain points only duplicate one of
+the selector column types.
+\end{proof}
+
+Thus polynomial centered-rank atom growth is a sufficient tractable regime,
+while a large selector partition recovers unrestricted Boolean matrices.
+
+\section{Low-degree cube and slice matrices}
+\label{sec:low-degree-slice}
+
+We next give a second transfer mechanism which is not limited to degree one.
+For a Boolean function on the cube, degree means the degree of its unique
+multilinear real polynomial.  For a function on $\binom{[n]}k$, slice degree
+is the minimum degree of a real polynomial agreeing with it on the layer.
+
+We use three published ingredients.  Filmus--Ihringer prove that there is a
+universal $C_0>1$ such that, when
+$\min(k,n-k)\ge C_0^s$, every Boolean slice function of degree at most $s$
+is the restriction of a Boolean cube function of the same degree
+\cite{FilmusIhringerJunta}.  Chiarelli--Hatami--Saks prove that every Boolean
+cube function of degree at most $s$ depends on at most
+$6.614\cdot2^s$ coordinates \cite{ChiarelliHatamiSaks}.  Finally, Midrijanis
+proves that such a function has deterministic decision-tree depth at most
+$2s^3$ \cite{Midrijanis}.  Put
+\[
+ J_s=7\cdot2^s,
+ \qquad q_s=2s^3,
+\]
+and enlarge $C_0$, if necessary, so that $C_0^s\ge J_s$ for every $s\ge1$.
+
+The new point is that the coordinate names used by the query trees can be
+compressed in terms of the actual matrix rank.
+
+\begin{lemma}[Rank pooling on the cube]
+\label{lem:cube-rank-pooling}
+Let $M$ be a Boolean matrix of rank $r\ge1$ whose columns are indexed by
+$\{0,1\}^n$.  If every row depends on at most $J$ coordinates, then all rows
+depend on one common set of at most $Jr$ coordinates.
+\end{lemma}
+
+\begin{proof}
+Choose $r$ rows $f_1,\ldots,f_r$ forming a basis of the row space, choose a
+relevant-coordinate set $S_i$ of size at most $J$ for each one, and put
+$S=\bigcup_iS_i$.  If two columns agree on $S$, every basis row takes the same
+value on them.  Every other row is a real linear combination of the basis
+rows and therefore also takes the same value.  Thus every row depends on
+$S$, while $|S|\le Jr$.
+\end{proof}
+
+\begin{theorem}[Low-degree cube Log-Rank theorem]
+\label{thm:low-degree-cube}
+Let $M$ be a Boolean matrix whose columns are indexed by $\{0,1\}^n$, and
+suppose every row has degree at most $s\ge1$.  If
+$r=\rank_{\R}M$, then
+\[
+ \Dcc(M)\le
+ 2s^3\left(
+ \left\lceil\log_2\bigl(7\cdot2^s(r+1)\bigr)\right\rceil+1
+ \right).
+\]
+\end{theorem}
+
+\begin{proof}
+If $r=0$, the matrix is identically zero.  Otherwise apply
+Lemma~\ref{lem:cube-rank-pooling} with $J=J_s$.  For each row, Alice simulates
+a depth-$q_s$ decision tree.  At every internal node she sends the index,
+inside the common coordinate pool, of the next queried coordinate; Bob
+returns its bit.  Each round costs at most
+$\lceil\log_2(J_sr)\rceil+1$ bits.  Alice knows the reached leaf and outputs
+its label.  Replacing $r$ by $r+1$ gives the displayed uniform bound.
+\end{proof}
+
+The only extra issue on a slice is that junta supports need not be unique,
+because the total weight is fixed.  The following synchronization lemma
+handles exactly this point.
+
+\begin{lemma}[Slice support intersection]
+\label{lem:slice-support-intersection}
+Let $f:\binom{[n]}k\to\R$ be both an $S$-junta and a $T$-junta.  If
+\[
+ [n]\setminus(S\cup T)\ne\varnothing,
+\]
+then $f$ is an $(S\cap T)$-junta.
+\end{lemma}
+
+\begin{proof}
+Put $U=S\cap T$ and choose $j\notin S\cup T$.  We first show that $f$ is
+invariant under every transposition of two coordinates outside $U$.  A
+transposition of two points outside $S$ preserves the $S$-trace and one of
+two points outside $T$ preserves the $T$-trace.  The only remaining case,
+after exchanging the two names, has
+$a\in S\setminus T$ and $b\in T\setminus S$.  The identity
+\[
+ (a\ b)=(a\ j)(b\ j)(a\ j)
+\]
+expresses it as two transpositions outside $T$ and one outside $S$, so it
+also preserves $f$.
+
+If two $k$-sets have the same trace on $U$, their two symmetric-difference
+halves have the same size and lie outside $U$.  Pair the two halves and swap
+the paired coordinates.  The resulting sequence of transpositions outside
+$U$ carries one set to the other, and every step preserves $f$.  Hence $f$
+depends only on its $U$-trace.
+\end{proof}
+
+This lemma combines with the sharp fixed-degree junta threshold on the slice.
+
+\begin{theorem}[Optimal-threshold fixed-degree slice theorem]
+\label{thm:fixed-degree-slice}
+For every $s\ge1$ there is an integer $m_s\ge1$ such that the following
+holds.  If
+\[
+ \min(k,n-k)\ge2s
+\]
+and every row of a Boolean matrix $M$ on $\binom{[n]}k$ has slice degree at
+most $s$, then, writing $r=\rank_{\R}M$,
+\[
+ \Dcc(M)\le
+ \left\lceil\log_2\left(
+ (m_s+1)\bigl(m_s(r+1)+1\bigr)^{m_s}2^{2^{m_s}}
+ \right)\right\rceil.
+\]
+In particular, $\Dcc(M)=O_s(\log(r+1))$.
+\end{theorem}
+
+\begin{proof}
+Filmus proves that every Boolean degree-$s$ function on such a slice is an
+$m_s$-junta, for a constant $m_s$ depending only on $s$
+\cite{FilmusJuntaThreshold}.  His theorem is stated for $k\le n/2$; the
+other half follows by complementing every coordinate, which preserves
+degree.
+
+Choose $r$ basis rows and let $S$ be the union of junta supports of size at
+most $m_s$ for those rows.  Then $|S|\le m_sr$, and every matrix row is an
+$S$-junta.  An arbitrary row also has some junta support $T$ with
+$|T|\le m_s$.  If $n>m_s(r+1)$, then $S\cup T\ne[n]$, and
+Lemma~\ref{lem:slice-support-intersection} replaces $T$ by $S\cap T$.
+If $n\le m_s(r+1)$, use all of $[n]$.  Thus in both cases every row has a
+junta support of size at most $m_s$ inside one common universe $U$ with
+\[
+ |U|\le m_s(r+1).
+\]
+
+There are at most
+\[
+ \sum_{j=0}^{m_s}\binom{|U|}{j}2^{2^j}
+ \le (m_s+1)(|U|+1)^{m_s}2^{2^{m_s}}
+\]
+distinct rows: choose a support and then a Boolean truth table on it.  Alice
+sends the index of her row among these possibilities, and Bob evaluates it
+on his column.  The displayed count proves the theorem.
+\end{proof}
+
+The preceding theorem uses a non-explicit junta-size constant.  A polynomial
+layer-depth assumption permits a completely explicit bound.  The extra
+ingredient is a symmetry lemma for decision trees.
+
+\begin{lemma}[Symmetric-tree canonicalization]
+\label{lem:symmetric-tree}
+Let $f:\binom{[n]}k\to\{0,1\}$ be an $S$-junta and suppose $f$ has a
+coordinate decision tree of depth at most $q$.  There is a set
+$R\subseteq[n]\setminus S$ with $|R|\le q$ and a depth-$q$ decision tree for
+$f$ all of whose queried coordinates lie in $S\cup R$.
+\end{lemma}
+
+\begin{proof}
+Choose any $R\subseteq[n]\setminus S$ of size
+$\min\{q,|[n]\setminus S|\}$.  We prove by induction on $q$ that every
+depth-$q$ tree can be replaced by one using only $S\cup R$.
+
+There is nothing to prove for a leaf.  Otherwise let $i$ be the root query.
+If $i\notin S$ and $i\notin R$, choose $j\in R$ and conjugate the entire tree
+by the transposition $(i\ j)$.  This still computes $f$, since the
+transposition fixes $S$ and $f$ is an $S$-junta, and its root query is now
+$j$.  Thus the root lies in $S\cup R$.
+
+If the root is a point of $R$, remove it from $R$ for the recursive calls and
+add it to the fixed support; each restricted function is invariant under all
+permutations outside $S$ together with that root.  If the root lies in $S$,
+use the same fixed subset of at most $q-1$ points of $R$ in both recursive
+calls.  Conjugating subtrees in the same way proves the induction step.
+\end{proof}
+
+We can now state the general communication principle.  A coordinate domain
+$\Omega\subseteq[Q]^n$ is called symmetric if it is invariant under every
+permutation of its $n$ coordinates.
+
+\begin{theorem}[Rank-pooled bounded-answer query transfer]
+\label{thm:rank-pooled-query}
+Let $M$ be a Boolean matrix of real rank $r$ whose column domain is either
+\begin{enumerate}
+\item a symmetric subdomain of $[Q]^n$, or
+\item a complete product $\prod_{i=1}^n\Sigma_i$ with
+      $2\le|\Sigma_i|\le Q$.
+\end{enumerate}
+Suppose every row function has a coordinate decision tree of depth at most
+$q$.  Put $L=\lceil\log_2Q\rceil$.  Then
+\[
+ \Dcc(M)\le
+ q\left(\lceil\log_2(r+1)\rceil+(q+1)L\right).
+\]
+Consequently, if both $q$ and $\log Q$ are polynomial in
+$\log(r+1)$, then the Log-Rank Conjecture holds for $M$.
+\end{theorem}
+
+\begin{proof}
+Assume $r\ge1$ and choose $r$ basis rows together with depth-$q$ coordinate
+trees.  A $Q$-ary depth-$q$ tree has fewer than $Q^q$ internal nodes.  If $S$
+is the union of every coordinate queried by the basis trees, then
+\[
+ |S|\le rQ^q.
+\]
+Every matrix row is a real linear combination of the basis rows and hence is
+an $S$-junta.
+
+In the symmetric case, Lemma~\ref{lem:symmetric-tree}, whose proof is
+unchanged for a multiway tree, puts every row tree inside one common universe
+$U=S\cup R$ with $|R|\le q$.  Thus
+\[
+ |U|\le rQ^q+q\le(r+1)Q^q.
+\]
+In the complete-product case, every query outside $S$ can instead be pruned:
+all its answer restrictions compute the same residual function, and any one
+child is valid on every assignment of the remaining coordinates.  Hence one
+may take $U=S$.
+
+Alice simulates the resulting row tree.  Each round she names a coordinate
+of $U$, using at most
+$\lceil\log_2(r+1)\rceil+qL$ bits, and Bob returns its value using $L$ bits.
+There are at most $q$ rounds.
+\end{proof}
+
+Dafni, Filmus, Lifshitz, Lindzey, and Vinyals prove quantitative polynomial
+relations between degree and coordinate decision-tree depth on multislices
+\cite{DafniFilmusLifshitzLindzeyVinyals}.  Their parameters give the following
+explicit slice consequence.  If
+\[
+ \min(k,n-k)\ge144s^4,
+\]
+then every Boolean slice function of degree at most $s$ has decision-tree
+depth at most
+\begin{equation}\label{eq:slice-query-depth}
+ q_s=5184s^8.
+\end{equation}
+Indeed, in their notation a slice has $\Delta=1$, conflict bound
+$M=\lfloor\min(k,n-k)/2\rfloor$, and block-sensitivity ratio
+$\beta\ge1/2$.  Their Theorem~3.1 gives
+$\operatorname{bs}(f)\le6s^2$ and, once
+$s\le(\beta M/36)^{1/4}$,
+\[
+ D_{\rm query}(f)
+ \le\beta^{-2}\Delta\operatorname{bs}(f)^4
+ \le4(6s^2)^4=5184s^8.
+\]
+
+\begin{theorem}[Polynomial-depth low-degree slice Log-Rank theorem]
+\label{thm:polynomial-depth-slice}
+Let $M$ be a Boolean matrix whose columns are indexed by $\binom{[n]}k$ and
+whose rows have slice degree at most $s\ge1$.  If
+\[
+ \min(k,n-k)\ge144s^4,
+\]
+put $r=\rank_{\R}M$ and $q_s=5184s^8$.  Then
+\[
+ \Dcc(M)\le
+ q_s\bigl(\lceil\log_2(r+1)\rceil+q_s+1\bigr).
+\]
+In particular,
+\[
+ \Dcc(M)=O\bigl(s^8\log(r+1)+s^{16}\bigr).
+\]
+\end{theorem}
+
+\begin{proof}
+The Johnson slice is a symmetric binary coordinate domain.  Equation
+\eqref{eq:slice-query-depth} supplies depth $q_s$ for every row.  Apply
+Theorem~\ref{thm:rank-pooled-query} with $Q=2$ and $L=1$.
+\end{proof}
+
+\begin{theorem}[Very-deep slice refinement]
+\label{thm:low-degree-slice}
+There is a universal constant $C>1$ such that the following holds.  Let $M$
+be a Boolean matrix whose columns are indexed by $\binom{[n]}k$, and suppose
+every row has slice degree at most $s\ge1$.  If
+\[
+ \min(k,n-k)\ge C^s
+\]
+and $r=\rank_{\R}M$, then
+\[
+ \Dcc(M)\le
+ 2s^3\left(
+ \left\lceil\log_2\bigl(7\cdot2^s(r+1)\bigr)\right\rceil+1
+ \right).
+\]
+Consequently
+\[
+ \rect(M)\ge
+ 2^{-2s^3(\lceil\log_2(7\cdot2^s(r+1))\rceil+1)}.
+\]
+\end{theorem}
+
+\begin{proof}
+The rank-zero case is immediate, so assume $r\ge1$.  Choose a row-space
+basis $f_1,\ldots,f_r$.  Extend each $f_i$ to a Boolean degree-$s$ cube
+function and let $S_i$ be a relevant-coordinate set of size at most $J_s$.
+Put $S=\bigcup_iS_i$, so $|S|\le J_sr$.  On the slice, every matrix row is a
+linear combination of the $f_i$ and hence is an $S$-junta.
+
+For an arbitrary row $f$, choose its own Boolean degree-$s$ cube extension
+$g$ and a relevant set $T$ with $|T|\le J_s$.  If
+$n>J_s(r+1)$, then $[n]\setminus(S\cup T)$ is nonempty.
+Lemma~\ref{lem:slice-support-intersection} shows that the restriction of $g$
+to the slice is an $(S\cap T)$-junta.  Every Boolean pattern on $T$ occurs on
+the slice because $|T|\le J_s\le\min(k,n-k)$.  It follows that the total cube
+function $g$ itself is independent of $T\setminus S$.  Thus its decision tree
+queries only coordinates in $S$.
+
+If instead $n\le J_s(r+1)$, use all of $[n]$ as the coordinate pool.  In both
+cases every row has a depth-$q_s$ decision tree whose queried coordinates lie
+in one common universe $U$ satisfying
+\[
+ |U|\le J_s(r+1).
+\]
+The protocol from Theorem~\ref{thm:low-degree-cube} now proves the
+communication bound.  A deterministic $c$-bit protocol has at most $2^c$
+transcript rectangles, so one monochromatic rectangle has relative density
+at least $2^{-c}$.
+\end{proof}
+
+Theorem~\ref{thm:fixed-degree-slice} gives
+$\Dcc(M)=O_s(\log(r+1))$ already at the optimal junta threshold.  The
+polynomial-depth Theorem~\ref{thm:polynomial-depth-slice} gives a fully
+explicit polylogarithmic bound whenever $s=\operatorname{polylog}(r+1)$,
+under the polynomial layer-depth condition $144s^4$.  In the still deeper
+$C^s$ regime, Theorem~\ref{thm:low-degree-slice} improves the dependence on
+$s$ from degrees eight and sixteen to degrees three and four.  All layer-depth
+conditions concern only the ambient slice and are independent of matrix rank.
+
+The opposite boundary is universal.
+
+\begin{proposition}[Low-degree boundary universality]
+\label{prop:low-degree-boundary}
+If $k\le s$, every Boolean function on $\binom{[n]}k$ has slice degree at
+most $s$.  The same holds if $n-k\le s$.  In particular, the case $k=1$
+contains every Boolean matrix with $n$ columns.
+\end{proposition}
+
+\begin{proof}
+For $\mathcal F\subseteq\binom{[n]}k$, its indicator on the layer is
+\[
+ \1_{\mathcal F}(x)=
+ \sum_{A\in\mathcal F}\prod_{i\in A}x_i.
+\]
+Exactly one degree-$k$ monomial is one at each layer point.  This proves the
+first assertion; the second follows by replacing every coordinate by its
+complement.  When $k=1$, the columns are the coordinate unit vectors and an
+arbitrary row is the indicator of an arbitrary subset of them.
+\end{proof}
+
+The threshold $2s$ in Theorem~\ref{thm:fixed-degree-slice} is sharp for a
+uniform bounded-junta conclusion \cite{FilmusJuntaThreshold}.  The polynomial
+$144s^4$ hypothesis supplies an explicit shallow decision tree, while the
+larger $C^s$ hypothesis supplies a same-degree total-cube extension and the
+sharper dependence on $s$.
+
+\subsection{Bounded alphabets and multislices}
+
+The rank-pooling mechanism extends beyond binary slices.  Let
+\[
+ \Omega_{\rm prod}=\prod_{i=1}^n[m_i],
+ \qquad 2\le m_i\le Q,
+\]
+and define degree using the coordinate-value indicators
+$\1_{\{x_i=a\}}$.  A query asks for $x_i$ and has at most $Q$ answers.
+
+\begin{theorem}[Low-degree bounded-alphabet product theorem]
+\label{thm:low-degree-product-domain}
+Let $M$ be a Boolean matrix with column domain $\Omega_{\rm prod}$ and rows
+of degree at most $s\ge1$.  Put
+\[
+ r=\rank_{\R}M,
+ \qquad q=1296s^8,
+ \qquad L=\lceil\log_2Q\rceil.
+\]
+Then
+\[
+ \Dcc(M)\le
+ q\left(\lceil\log_2(r+1)\rceil+(q+1)L\right).
+\]
+For fixed $Q$, this is
+$O_Q(s^8\log(r+1)+s^{16})$.
+\end{theorem}
+
+\begin{proof}
+For a complete product domain, the parameters in
+\cite[Theorem~3.1]{DafniFilmusLifshitzLindzeyVinyals} are
+$\Delta=1$, conflict bound $M_0=n$, and $\beta=1$.  Hence every Boolean
+degree-$s$ row has coordinate decision-tree depth at most
+\[
+ \operatorname{bs}(f)^4\le(6s^2)^4=1296s^8=q.
+\]
+Apply Theorem~\ref{thm:rank-pooled-query} in its complete-product case.
+\end{proof}
+
+The bounded-alphabet condition is essential.  A single coordinate with a
+large alphabet is a selector domain: its degree-one Boolean functions already
+encode arbitrary Boolean matrices.
+
+Now let $\boldsymbol\lambda=(\lambda_1,\ldots,\lambda_m)$ be positive
+integers summing to $n$, with $m\le Q$, and consider the multislice
+\[
+ \Omega(\boldsymbol\lambda)
+ =\{x\in[m]^n:|\{i:x_i=c\}|=\lambda_c\text{ for every }c\}.
+\]
+Write $\lambda_{\min}=\min_c\lambda_c$.
+
+\begin{theorem}[Low-degree multislice Log-Rank theorem]
+\label{thm:low-degree-multislice}
+Let $M$ be a Boolean matrix with column domain
+$\Omega(\boldsymbol\lambda)$ and rows of multislice degree at most $s\ge1$.
+Assume
+\[
+ \lambda_{\min}\ge216s^4.
+\]
+Put
+\[
+ r=\rank_{\R}M,
+ \qquad q=11664s^8,
+ \qquad L=\lceil\log_2Q\rceil.
+\]
+Then
+\[
+ \Dcc(M)\le
+ q\left(\lceil\log_2(r+1)\rceil+(q+1)L\right).
+\]
+For fixed $Q$, this is
+$O_Q(s^8\log(r+1)+s^{16})$.
+\end{theorem}
+
+\begin{proof}
+For a multislice, the parameters in
+\cite[Theorem~3.1 and Section~4.3]{DafniFilmusLifshitzLindzeyVinyals} are
+\[
+ \Delta=1,
+ \qquad M_0=\lfloor\lambda_{\min}/2\rfloor,
+ \qquad \beta\ge1/3.
+\]
+The layer hypothesis implies
+$s\le(\beta M_0/36)^{1/4}$.  Their strengthened bound therefore gives
+\[
+ D_{\rm query}(f)
+ \le\beta^{-2}\operatorname{bs}(f)^4
+ \le9(6s^2)^4=11664s^8=q.
+\]
+The multislice is symmetric under coordinate permutations.  Apply
+Theorem~\ref{thm:rank-pooled-query}.
+\end{proof}
+
+When a color has multiplicity one, degree-one selector universality already
+recovers arbitrary Boolean matrices.  Thus some lower bound on
+$\lambda_{\min}$ is structurally unavoidable, although the polynomial
+$216s^4$ threshold is not claimed to be sharp.
+
+\subsection{Unisolvent sparse-column transfer}
+
+The preceding theorems remain valid after a sparse column restriction that
+preserves the ambient function space.  Let $V\subseteq\R^\Omega$ be a
+finite-dimensional space and $Y\subseteq\Omega$.  Call $Y$
+\emph{$V$-unisolvent} if the restriction map
+\[
+ \operatorname{res}_Y:V\longrightarrow\R^Y
+\]
+is injective.
+
+\begin{theorem}[Unisolvent sparse-column transfer]
+\label{thm:unisolvent-transfer}
+Assume $\Omega$ satisfies one of the two domain hypotheses in
+Theorem~\ref{thm:rank-pooled-query}, every Boolean function in $V$ has
+coordinate-query depth at most $q$, and $Y$ is $V$-unisolvent.  Then every
+Boolean matrix $M$ with columns $Y$ whose rows extend to Boolean functions in
+$V$ satisfies
+\[
+ \Dcc(M)\le
+ q\left(\lceil\log_2(\rank_{\R}M+1)\rceil+
+ (q+1)\lceil\log_2Q\rceil\right).
+\]
+\end{theorem}
+
+\begin{proof}
+Let $\widetilde M$ be the matrix with the same row functions and all ambient
+columns $\Omega$.  A row relation of $\widetilde M$ remains one after
+restriction.  Conversely, a restricted relation is an element of $V$
+vanishing on $Y$, and unisolvence forces it to vanish on $\Omega$.  Hence
+\[
+ \rank_{\R}\widetilde M=\rank_{\R}M.
+\]
+Apply Theorem~\ref{thm:rank-pooled-query} to $\widetilde M$ and restrict Bob's
+inputs to $Y$.
+\end{proof}
+
+The assumption that each sparse row already has a Boolean ambient extension
+can itself be certified by unisolvence at twice the degree.
+
+\begin{theorem}[Booleanity-certifying sparse transfer]
+\label{thm:booleanity-certifying-transfer}
+Let $V_{\le s}\subseteq V_{\le2s}\subseteq\R^\Omega$ be a degree filtration
+such that
+\[
+ f\in V_{\le s}\quad\Longrightarrow\quad f(f-1)\in V_{\le2s}.
+\]
+If $Y$ is $V_{\le2s}$-unisolvent and $f\in V_{\le s}$ takes values in
+$\{0,1\}$ on $Y$, then $f$ is Boolean on all of $\Omega$.  Consequently
+Theorem~\ref{thm:unisolvent-transfer} applies to Boolean matrices on $Y$
+whose rows merely extend to real functions in $V_{\le s}$.
+\end{theorem}
+
+\begin{proof}
+The function $h=f(f-1)$ belongs to $V_{\le2s}$ and vanishes on $Y$.
+Unisolvence gives $h=0$ on $\Omega$, so $f(x)\in\{0,1\}$ everywhere.
+Moreover $V_{\le s}\subseteq V_{\le2s}$, so every restricted row relation
+lifts to the ambient domain as in Theorem~\ref{thm:unisolvent-transfer}.
+\end{proof}
+
+We next show that random sparse subsets are unisolvent on every transitive
+invariant function space.  Let a finite group act transitively on $\Omega$,
+let $V\subseteq\R^\Omega$ be invariant, and put $d=\dim V$.  Choose an
+orthonormal basis $\phi_1,\ldots,\phi_d$ for the uniform inner product and
+write
+\[
+ z_x=(\phi_1(x),\ldots,\phi_d(x))^\top.
+\]
+The diagonal of the reproducing kernel is invariant and hence constant.
+Taking its average gives
+\begin{equation}\label{eq:constant-leverage}
+ \|z_x\|_2^2=d,
+ \qquad
+ \mathbb E_{x\in\Omega}z_xz_x^\top=I_d.
+\end{equation}
+
+\begin{theorem}[Random unisolvent sampling]
+\label{thm:random-unisolvent}
+Let $Y$ be a uniformly random $N$-element subset of $\Omega$, sampled
+without replacement.  Then
+\[
+ \Pr[Y\text{ is not }V\text{-unisolvent}]
+ \le d\exp\left(-\frac{N}{8d}\right).
+\]
+Consequently $N\ge8d\log(d/\delta)$ gives unisolvence with probability at
+least $1-\delta$.
+\end{theorem}
+
+\begin{proof}
+Restriction is injective exactly when
+\[
+ G_Y=\sum_{x\in Y}z_xz_x^\top
+\]
+is positive definite.  By \eqref{eq:constant-leverage}, the summands are
+positive semidefinite, bounded by $dI_d$, and have mean $I_d$.  Matrix
+Chernoff at lower deviation $1/2$ \cite{Tropp}, together with the
+without-replacement Laplace-transform comparison of Gross--Nesme
+\cite{GrossNesme}, yields
+\[
+ \Pr[\lambda_{\min}(G_Y)\le N/2]
+ \le d\left(\sqrt{\frac2e}\right)^{N/d}
+ \le d e^{-N/(8d)}.
+\]
+Outside this event $G_Y$ is positive definite.
+\end{proof}
+
+The logarithmic oversampling factor can be removed by standard projection-DPP
+volume sampling.  Let $A\in\R^{|\Omega|\times d}$ have orthonormal columns
+spanning the evaluation image of $V$ in the standard Euclidean inner product,
+and put $P=AA^\top$.
+
+\begin{theorem}[Minimal projection-DPP unisolvent sampling]
+\label{thm:dpp-unisolvent}
+For every $d$-element subset $Y\subseteq\Omega$, define
+\[
+ \Pr_{\rm DPP}[Y]=\det(P_Y).
+\]
+These probabilities sum to one, and every set in their support is
+$V$-unisolvent.  Thus the process always selects exactly the
+information-theoretic minimum $d=\dim V$ columns.
+\end{theorem}
+
+\begin{proof}
+For $|Y|=d$,
+\[
+ \det(P_Y)=\det(A_YA_Y^\top)=\det(A_Y)^2.
+\]
+Cauchy--Binet gives
+\[
+ \sum_{|Y|=d}\det(P_Y)
+ =\sum_{|Y|=d}\det(A_Y)^2
+ =\det(A^\top A)=1.
+\]
+Positive probability is equivalent to $A_Y$ being nonsingular, which is
+exactly unisolvence.  Conversely, injectivity of $V\to\R^Y$ requires
+$|Y|\ge d$.
+\end{proof}
+
+When $V$ is invariant under a transitive group, $P$ and the resulting
+projection DPP are invariant.  Its one-point marginals are uniform:
+\[
+ \Pr[x\in Y]=P_{xx}=d/|\Omega|.
+\]
+
+For the Johnson slice, let $V_{\le s}$ be the space of functions of slice
+degree at most $s$.  The harmonic decomposition gives
+\begin{equation}\label{eq:slice-degree-dimension}
+ \dim V_{\le s}
+ =\sum_{j=0}^s\left(\binom nj-\binom n{j-1}\right)
+ =\binom ns
+ \qquad(s\le\min(k,n-k))
+\end{equation}
+\cite{FilmusOrthogonal}, with $\binom n{-1}=0$.  This space is invariant
+under the transitive $S_n$-action.
+
+\begin{corollary}[Exponentially sparse random Johnson columns]
+\label{cor:sparse-random-johnson}
+Assume
+\[
+ \min(k,n-k)\ge144s^4,
+ \qquad d_s=\binom ns,
+\]
+and choose a uniformly random $N$-element family
+$Y\subseteq\binom{[n]}k$ with
+\[
+ N\ge8d_s\log(d_s/\delta).
+\]
+With probability at least $1-\delta$, simultaneously for every Boolean
+matrix whose rows extend to degree-$s$ Boolean functions on the full slice,
+\[
+ \Dcc(M)\le
+ q_s\bigl(\lceil\log_2(\rank_{\R}M+1)\rceil+q_s+1\bigr),
+ \qquad q_s=5184s^8.
+\]
+\end{corollary}
+
+\begin{proof}
+Theorem~\ref{thm:random-unisolvent} and
+\eqref{eq:slice-degree-dimension} make $Y$ $V_{\le s}$-unisolvent with the
+stated probability.  Equation~\eqref{eq:slice-query-depth} supplies query
+depth $q_s$, so Theorem~\ref{thm:unisolvent-transfer} applies with $Q=2$.
+The unisolvence event depends only on $Y$, which gives the simultaneous
+statement over all later row families.
+\end{proof}
+
+\begin{corollary}[Minimal projection-DPP Johnson columns]
+\label{cor:dpp-johnson}
+Under the hypotheses of Corollary~\ref{cor:sparse-random-johnson}, sample
+$Y$ from the rank-$\binom ns$ projection DPP of $V_{\le s}$.  Then
+\[
+ |Y|=\binom ns
+\]
+and, with probability one, the communication conclusion of that corollary
+holds simultaneously for every Boolean degree-$s$ row family restricted to
+$Y$.  No smaller column set can be unisolvent for the entire space
+$V_{\le s}$.
+\end{corollary}
+
+\begin{proof}
+Apply Theorem~\ref{thm:dpp-unisolvent}, then
+Theorem~\ref{thm:unisolvent-transfer}.
+\end{proof}
+
+The twice-degree certificate gives a particularly sharp adjacent-two-value
+theorem with only quadratically many columns.
+
+\begin{theorem}[Explicit quadratic unisolvent cross]
+\label{thm:explicit-cross}
+Assume $2\le k\le n-2$.  Fix a $k$-set $I$, put $O=[n]\setminus I$, and
+choose fixed pairs $I_0\in\binom I2$ and $O_0\in\binom O2$.  Define
+\begin{align*}
+ \cY_\times={}&\{I\}
+ \cup\{I\setminus\{i\}\cup\{a\}:i\in I,\ a\in O\}\\
+ &{}\cup\{I\setminus\{i,j\}\cup O_0:\{i,j\}\in\tbinom I2\}\\
+ &{}\cup\{I\setminus I_0\cup\{a,b\}:\{a,b\}\in\tbinom O2\}.
+\end{align*}
+Then
+\[
+ |\cY_\times|=\binom n2,
+\]
+and $\cY_\times$ is unisolvent for the degree-at-most-two slice space.
+\end{theorem}
+
+\begin{proof}
+The two double-swap families overlap only at $I\setminus I_0\cup O_0$, so
+\[
+ |\cY_\times|
+ =1+k(n-k)+\binom k2+\binom{n-k}2-1
+ =\binom n2.
+\]
+On the weight-$k$ slice, pair monomials span all degree-at-most-two functions:
+\[
+ x_i=\frac1{k-1}\sum_{j\ne i}x_ix_j,
+ \qquad
+ 1=\frac1{\binom k2}\sum_{i<j}x_ix_j.
+\]
+It suffices to show that a pair polynomial
+\[
+ F(B)=\sum_{\{u,v\}\subseteq B}c_{uv}
+\]
+vanishing on $\cY_\times$ has all coefficients zero.
+
+Write
+\[
+ S=\sum_{\{i,j\}\in\binom I2}c_{ij},
+ \qquad X_i=\sum_{j\in I\setminus\{i\}}c_{ij},
+ \qquad Y_a=\sum_{i\in I}c_{ia}.
+\]
+Evaluation at $I$ gives $S=0$ and hence $\sum_iX_i=0$.  Evaluation at
+$I\setminus\{i\}\cup\{a\}$ gives
+\[
+ c_{ia}=Y_a-X_i.
+\]
+Summing over $i$ yields $(k-1)Y_a=0$, so
+\begin{equation}\label{eq:cross-coefficients}
+ Y_a=0,
+ \qquad c_{ia}=-X_i.
+\end{equation}
+
+Write $O_0=\{a_0,a_1\}$ and $z_0=c_{a_0a_1}$.  Evaluation at
+$I\setminus\{i,j\}\cup O_0$, using \eqref{eq:cross-coefficients}, gives
+\begin{equation}\label{eq:inside-coefficients}
+ c_{ij}=-X_i-X_j-z_0.
+\end{equation}
+Summing \eqref{eq:inside-coefficients} over $j\ne i$ and using
+$\sum_jX_j=0$ gives $X_i=-z_0$ for every $i$.  Summing in $i$ gives
+$z_0=0$, so all inside and cross coefficients vanish.  Finally, evaluation
+at $I\setminus I_0\cup\{a,b\}$ gives $c_{ab}=0$ for every outside pair.
+Thus $F=0$.
+\end{proof}
+
+\begin{theorem}[Sparse adjacent-two-value Log-Rank from unisolvence]
+\label{thm:quadratic-column-hls}
+Assume $2\le k\le n-2$, and let $Y\subseteq\binom{[n]}k$ be unisolvent for
+the degree-at-most-two slice space.  Then the following holds simultaneously
+for every $\cA\subseteq2^{[n]}$ and integer $a$ satisfying
+\[
+ |A\cap B|\in\{a,a+1\}
+ \qquad(A\in\cA,\ B\in Y).
+\]
+For $M_{A,B}=|A\cap B|-a$ and $r=\rank_{\R}M$,
+\[
+ \Dcc(M)\le\lceil\log_2(r+1)\rceil+1,
+ \qquad
+ \rect(M)\ge\frac1{4(r+1)}.
+\]
+\end{theorem}
+
+\begin{proof}
+For fixed $A$, the affine function $f_A(B)=|A\cap B|-a$ has slice degree at
+most one and is Boolean on $Y$.  The selected set is unisolvent through
+degree two by hypothesis, so Theorem~\ref{thm:booleanity-certifying-transfer} makes $f_A$
+Boolean on the complete slice.  Every Boolean degree-one function on an
+interior Johnson slice is constant, a coordinate query, or its complement
+\cite{FilmusIhringer}.
+
+Choose $r$ basis rows.  Their depth-one trees query at most $r$ coordinates,
+and every other row is a junta over this pooled set.  The proof of
+Lemma~\ref{lem:symmetric-tree} uses at most one additional representative.
+Alice sends its index among at most $r+1$ possibilities and Bob returns one
+bit, proving the communication bound.  Finally,
+\[
+ 2^{-\lceil\log_2(r+1)\rceil-1}\ge\frac1{4(r+1)},
+\]
+so a largest transcript rectangle gives the stated density.
+\end{proof}
+
+\begin{corollary}[Quadratic-column adjacent-two-value Log-Rank]
+\label{cor:quadratic-column-hls}
+For every $2\le k\le n-2$, there exists a fixed family
+$Y\subseteq\binom{[n]}k$ with
+\[
+ |Y|=\binom n2
+\]
+for which all conclusions of Theorem~\ref{thm:quadratic-column-hls} hold.
+Moreover, a sample from the degree-two projection DPP has this property with
+probability one.
+\end{corollary}
+
+\begin{proof}
+Take $Y=\cY_\times$ from Theorem~\ref{thm:explicit-cross}.  The final DPP
+assertion follows from Theorem~\ref{thm:dpp-unisolvent} and
+\eqref{eq:slice-degree-dimension}.
+\end{proof}
+
+On balanced layers the column count can be reduced further, from quadratic
+to linear, by separating Booleanity detection from rank preservation.  Put
+\begin{equation}\label{eq:four-fiber-gap}
+ \gamma_{n,k}
+ =\frac{\binom{n-4}{k-2}}{\binom nk}
+ =\frac{k(k-1)(n-k)(n-k-1)}{n(n-1)(n-2)(n-3)}.
+\end{equation}
+
+\begin{lemma}[Four-coordinate two-value gap]
+\label{lem:four-coordinate-gap}
+For every $A\subseteq[n]$ with $2\le|A|\le n-2$ and every integer $a$,
+\[
+ \Pr_{B\in\binom{[n]}k}[|A\cap B|\in\{a,a+1\}]
+ \le1-\gamma_{n,k}.
+\]
+\end{lemma}
+
+\begin{proof}
+Choose $u,v\in A$ and $p,q\notin A$, all distinct, and partition the
+$k$-sets by their trace outside $D=\{u,v,p,q\}$.  A fiber whose outside
+trace has size $k-2$ contains the six two-subsets of $D$.  Their local
+contributions to $|A\cap B|$ are $0,1,2$ with multiplicities $1,4,1$.
+Any two consecutive integers omit at least one extreme.  There are
+$\binom{n-4}{k-2}$ such fibers, proving the claim.
+\end{proof}
+
+The fourth-power parameter in Lemma~\ref{lem:four-coordinate-gap} is an
+artifact of activating one fixed four-coordinate fiber.  We next prove a
+quadratic bound.  Put
+\begin{equation}\label{eq:quadratic-gap}
+ p_{n,k}=\frac{\min\{k,n-k\}}n,
+ \qquad
+ \eta_{n,k}=\frac{p_{n,k}^2}{16},
+ \qquad
+ \xi_{n,k}=\frac25p_{n,k}^2,
+ \qquad
+ \theta_{n,k}=\max\{\gamma_{n,k},\xi_{n,k}\}.
+\end{equation}
+
+\begin{lemma}[Log-concave two-point escape]
+\label{lem:log-concave-two-point}
+Let $Z$ be integer-valued with a finite, interval-supported, log-concave
+probability mass function.  If $\Var(Z)\ge1/3$, then for every integer $a$,
+\[
+ \Pr[Z\notin\{a,a+1\}]\ge\frac1{64}.
+\]
+\end{lemma}
+
+\begin{proof}
+Write $\varepsilon=\Pr[Z\notin\{a,a+1\}]$, $u=\Pr[Z=a]$, and
+$v=\Pr[Z=a+1]$, and suppose that $\varepsilon<1/64$.  If
+$M=\max\{u,v\}$ and $r=\sqrt{\varepsilon/M}$, then
+\[
+ M>63/128,
+ \qquad r^2<2/63<1/25.
+\]
+Log-concavity and the fact that each first tail atom is at most
+$\varepsilon$ give
+\[
+ \frac{\Pr[Z=a+2]}v\le r,
+ \qquad
+ \frac{\Pr[Z=a-1]}u\le r,
+\]
+with the zero cases interpreted using interval support.  Indeed, when
+$u>v>0$, the first inequality follows from
+\[
+ \frac{\Pr[Z=a+2]}v
+ \le\min\left\{\frac vu,\frac\varepsilon v\right\}
+ \le\sqrt{\frac\varepsilon u},
+\]
+and the other order and the left tail are symmetric.  Successive mass ratios
+decrease away from a log-concave mode.  Put
+$t_-=\Pr[Z=a-1]$ and $t_+=\Pr[Z=a+2]$.  Hence for $j\ge1$ the two tail atoms
+at distance $j+1/2$ from $a+1/2$ are at most
+$t_-r^{j-1}$ and $t_+r^{j-1}$, respectively, while
+$t_-+t_+\le\varepsilon$.
+
+Since $r<1/5$,
+\[
+ \sum_{j\ge1}(j+1/2)^2r^{j-1}
+ \le\frac{1+r}{(1-r)^3}+\frac1{(1-r)^2}+\frac1{4(1-r)}
+ \le\frac{135}{32}<\frac{17}{4}.
+\]
+Centering at $a+1/2$ therefore gives
+\[
+ \Var(Z)
+ \le\mathbb E(Z-a-1/2)^2
+ <\frac14+\frac{17}{4}\varepsilon
+ <\frac{81}{256}<\frac13,
+\]
+a contradiction.
+\end{proof}
+
+\begin{theorem}[Quadratic hypergeometric two-point gap]
+\label{thm:quadratic-hypergeometric-gap}
+For every $A\subseteq[n]$ with $2\le|A|\le n-2$ and every integer $a$,
+\[
+ \Pr_{B\in\binom{[n]}k}[|A\cap B|\notin\{a,a+1\}]
+ \ge\eta_{n,k}.
+\]
+\end{theorem}
+
+\begin{proof}
+Complementing $B$ replaces $k$ by $n-k$ and $|A\cap B|$ by
+$|A|-|A\cap B|$.  Complementing $A$ replaces $|A|$ by $n-|A|$ and the
+intersection by $k-|A\cap B|$.  Thus assume
+$2\le k,m:=|A|\le n/2$.  Set
+\[
+ p=k/n,
+ \qquad q=m/n,
+ \qquad \mu=\mathbb E|A\cap B|=pqn.
+\]
+The hypergeometric mass ratios
+\[
+ \frac{\Pr[X=j+1]}{\Pr[X=j]}
+ =\frac{(m-j)(k-j)}{(j+1)(n-m-k+j+1)}
+\]
+decrease in $j$, so the law is interval-supported and log-concave.
+
+Suppose first that $\mu\ge1$.  Since
+\[
+ p+q\le\frac12+2pq
+\]
+for $p,q\le1/2$, the exact hypergeometric variance satisfies
+\[
+ \Var(X)
+ =\mu(1-p)(1-q)\frac n{n-1}
+ \ge\frac{\mu(n-2\mu)}{2(n-1)}
+ \ge\frac13.
+\]
+The last quadratic is concave on $[1,n/4]$, and both endpoint values are at
+least $1/3$.  Lemma~\ref{lem:log-concave-two-point} gives escape at least
+$1/64\ge p^2/16$.
+
+Now suppose $\mu<1$.  For $a\le-2$ the conclusion is immediate.  For
+$a=-1$, fixing one element of $A$ gives escape probability at least
+$p\ge p^2/16$.  For $a=0$, fixing two elements gives
+\[
+ \Pr[X\ge2]\ge\frac{k(k-1)}{n(n-1)}\ge\frac{p^2}{2}.
+\]
+Finally let $a\ge1$.  Then $X=0$ is an escape value.  Integrality of
+$km<n$ and $2\le k\le n/2$ gives, for $0\le i<k$,
+\[
+ \frac m{n-i}
+ \le\frac{n-1}{k(n-k+1)}\le\frac12,
+ \qquad
+ \sum_{i=0}^{k-1}\frac m{n-i}<2.
+\]
+Here the bound by $1/2$ follows from
+$k(n-k+1)-2(n-1)=(k-2)(n-k-1)\ge0$.
+By concavity, $\log(1-x)\ge-x\log4$ on $[0,1/2]$.  Therefore
+\[
+ \Pr[X=0]
+ =\prod_{i=0}^{k-1}\left(1-\frac m{n-i}\right)
+ >\frac1{16}\ge\frac{p^2}{16}.
+\]
+This covers every adjacent pair.
+\end{proof}
+
+\begin{proposition}[Sharp \(2/5\) gap for row short-side at most three]
+\label{prop:sharp-three-marked-gap}
+Let
+\[
+ q=\min\{k,n-k\},
+ \qquad
+ s=\min\{|A|,n-|A|\}.
+\]
+If \(s\in\{2,3\}\), then for every integer \(a\),
+\[
+ \Pr_{B\in\binom{[n]}k}[|A\cap B|\notin\{a,a+1\}]
+ \ge\frac25\left(\frac qn\right)^2.
+\]
+Equality holds if and only if
+\[
+ (n,k,|A|,a)=(6,3,3,1).
+\]
+\end{proposition}
+
+\begin{proof}
+Complementing \(A\) and \(B\) reduces to
+\(2\le k\le n/2\) and \(m:=|A|\in\{2,3\}\).
+For \(m=2\), the least mass left outside an adjacent pair is
+\[
+ \frac{k(k-1)}{n(n-1)}
+ >\frac25\left(\frac kn\right)^2.
+\]
+
+Let \(m=3\), write \(P_j=\Pr[|A\cap B|=j]\), and put
+\(D=n(n-1)(n-2)\).  Then
+\[
+\begin{aligned}
+ P_0&=\frac{(n-k)(n-k-1)(n-k-2)}D,&
+ P_1&=\frac{3k(n-k)(n-k-1)}D,\\
+ P_2&=\frac{3k(k-1)(n-k)}D,&
+ P_3&=\frac{k(k-1)(k-2)}D.
+\end{aligned}
+\]
+Since \(P_0\ge P_3\) and \(P_1\ge P_2\), it is enough to bound
+\(P_2+P_3\) and \(P_0+P_3\).
+
+Write \(n=2k+t\), \(t\ge0\).  After clearing positive denominators, the first
+bound is the strict positivity of
+\[
+\begin{aligned}
+ H(k,t)={}&16k(k-1)(2k-1)\\
+ &+(42k^2-54k+10)t+(13k-15)t^2,
+\end{aligned}
+\]
+whose displayed coefficients are positive for \(k\ge2\).
+The second bound is equivalent to \(F(k,t)\ge0\), where
+\[
+\begin{aligned}
+ F(k,t)={}&12k^2(k-1)(k-3)
+ +(32k^3-84k^2+40k)t\\
+ &+(43k^2-60k+10)t^2+(25k-15)t^3+5t^4.
+\end{aligned}
+\]
+For \(k\ge3\), every coefficient is nonnegative; the only possible zero is
+\(k=3,t=0\).  For \(k=2\), the constraint \(m=3\le n/2\) gives \(t\ge2\),
+and
+\[
+ F(2,t)=-48+62t^2+35t^3+5t^4>0.
+\]
+Thus equality occurs only at \(n=6,k=3\), where the escaping mass
+\(P_0+P_3=1/10\) corresponds to the captured pair \(\{1,2\}\), hence \(a=1\).
+\end{proof}
+
+
+
+
+\begin{proposition}[Sharp \(2/5\) gap on the low-density side]
+\label{prop:sharp-low-density-gap}
+If
+\[
+ \frac{\min\{k,n-k\}}n\le\frac13,
+\]
+then for every nontrivial \(A\subseteq[n]\) and every integer \(a\),
+\[
+ \Pr_{B\in\binom{[n]}k}[|A\cap B|\notin\{a,a+1\}]
+ >
+ \frac25\left(\frac{\min\{k,n-k\}}n\right)^2.
+\]
+\end{proposition}
+
+\begin{proof}
+Complement \(B\) and write \(n=3k+t\), where \(k\ge2\) and \(t\ge0\).
+After substituting the four-coordinate lower bound and clearing positive
+denominators, the assertion is equivalent to \(L(k,t)>0\), where
+\[
+\begin{aligned}
+L(k,t)={}&6k^4+18k^3-36k^2+12k
+ +(26k^3-33k^2+3k)t\\
+&+(17k^2-28k+5)t^2+(3k-5)t^3.
+\end{aligned}
+\]
+Putting \(k=q+2\) gives
+\[
+\begin{aligned}
+L(q+2,t)={}&6q^4+66q^3+216q^2+276q+120\\
+&+(26q^3+123q^2+183q+82)t\\
+&+(17q^2+40q+17)t^2+(3q+1)t^3,
+\end{aligned}
+\]
+which is strictly positive for \(q,t\ge0\).
+\end{proof}
+
+Propositions~\ref{prop:sharp-three-marked-gap} and
+\ref{prop:sharp-low-density-gap} reduce the unresolved sharp \(2/5\) theorem
+to
+\[
+ \frac13<\frac{\min\{k,n-k\}}n\le\frac12,
+ \qquad
+ \min\{|A|,n-|A|\}\ge4.
+\]
+
+
+
+\begin{theorem}[Global sharp hypergeometric two-point gap]
+\label{thm:global-sharp-hypergeometric-gap}
+For every \(A\subseteq[n]\) with \(2\le|A|\le n-2\) and every integer \(a\),
+\[
+ \Pr_{B\in\binom{[n]}k}[|A\cap B|\notin\{a,a+1\}]
+ \ge\frac25
+ \left(\frac{\min\{k,n-k\}}n\right)^2.
+\]
+Equality holds if and only if
+\[
+ (n,k,|A|,a)=(6,3,3,1).
+\]
+\end{theorem}
+
+\begin{proof}
+Complement \(A\) and \(B\) so that \(2\le k\le n/2\) and
+\(2\le m:=|A|\le n/2\).  The case \(m=2\) is strict by
+Proposition~\ref{prop:sharp-three-marked-gap}.  For \(m\ge3\), fix three
+points of \(A\) and three of its complement.  Partition the \(k\)-sets by
+their trace outside these six coordinates.
+
+For local trace sizes \(2,3,4\), the local intersection multiplicities are
+\[
+ (3,9,3),\qquad(1,9,9,1),\qquad(3,9,3).
+\]
+Every adjacent pair misses at least \(3,2,3\) local columns, respectively.
+Summing the fibers gives escape probability at least
+\[
+ \zeta_{n,k}
+ =
+ \frac{3\binom{n-6}{k-2}
+ +2\binom{n-6}{k-3}
+ +3\binom{n-6}{k-4}}{\binom nk}.
+\]
+Here and below, out-of-range binomial coefficients are interpreted as zero.
+
+Write \(n=2k+t\), \(t\ge0\).  Clearing the positive denominators in
+\(\zeta_{n,k}\ge2(k/n)^2/5\) gives \(G(k,t)\ge0\).  For \(k=q+3\),
+\[
+\begin{aligned}
+G(q+3,t)={}&16q^6+228q^5+1180q^4+2820q^3+3124q^2+1272q\\
+&+(120q^5+1140q^4+4040q^3+6480q^2+4432q+876)t\\
+&+(230q^4+1665q^3+4325q^2+4710q+1750)t^2\\
+&+(195q^3+1065q^2+1925q+1140)t^3\\
+&+(80q^2+300q+290)t^4+(13q+24)t^5.
+\end{aligned}
+\]
+All coefficients are nonnegative, and the unique zero is \(q=t=0\).
+For \(k=2\), one has \(t\ge2\); putting \(t=s+2\) gives
+\[
+G(2,s+2)
+=11s^5+180s^4+1085s^3+3000s^2+3764s+1680>0.
+\]
+Thus equality requires \(n=6,k=3\).  Then the six-coordinate fiber is the
+whole ground set, \(m=3\), and its multiplicities are \((1,9,9,1)\).
+Exactly two of twenty columns escape only when the captured pair is
+\(\{1,2\}\), giving \(a=1\).
+\end{proof}
+
+
+Combining Lemma~\ref{lem:four-coordinate-gap} and
+Theorem~\ref{thm:global-sharp-hypergeometric-gap}, every nontrivial row escapes
+every consecutive pair on at least a $\theta_{n,k}$-fraction of the layer.
+
+We also need an explicit linear-size rank anchor.  Fix $i_0\in I$ and
+$a_0\notin I$, and set
+\begin{equation}\label{eq:linear-rank-anchor}
+ \cY_0=\{I\}
+ \cup\{I\setminus\{i_0\}\cup\{a\}:a\notin I\}
+ \cup\{I\setminus\{i\}\cup\{a_0\}:i\in I\setminus\{i_0\}\}.
+\end{equation}
+Then $|\cY_0|=n$.
+
+\begin{lemma}[Linear degree-one anchor]
+\label{lem:linear-rank-anchor}
+The family $\cY_0$ is unisolvent for the degree-at-most-one slice space.
+\end{lemma}
+
+\begin{proof}
+If $f(B)=c+\sum_{j\in B}w_j$ vanishes on $\cY_0$, comparison with $I$ gives
+$w_a=w_{i_0}$ for every $a\notin I$, and $w_i=w_{a_0}$ for every
+$i\in I\setminus\{i_0\}$.  Thus all $w_j$ are equal, so $f$ is constant on
+the slice; its value at $I$ is zero.
+\end{proof}
+
+\begin{theorem}[Linear-size sparse HLS on balanced layers]
+\label{thm:linear-sparse-hls}
+Let $\cY_1$ be a uniformly random $N$-element subset of
+$\binom{[n]}k$, sampled without replacement, and put
+$\cY=\cY_0\cup\cY_1$.  If
+\[
+ N\ge
+ \frac{n\log2+\log(n+2)+\log(1/\delta)}{\theta_{n,k}},
+\]
+then, with probability at least $1-\delta$, simultaneously for every
+$\cA\subseteq2^{[n]}$ and integer $a$ satisfying
+\[
+ |A\cap B|\in\{a,a+1\}
+ \qquad(A\in\cA,\ B\in\cY),
+\]
+the matrix $M_{A,B}=|A\cap B|-a$ satisfies, with $r=\rank_{\R}M$,
+\[
+ \Dcc(M)\le\lceil\log_2(r+1)\rceil+1,
+ \qquad
+ \rect(M)\ge\frac1{4(r+1)}.
+\]
+Moreover $|\cY|\le n+N$.
+\end{theorem}
+
+\begin{proof}
+For fixed nontrivial $A$ and $a$, the combined $\theta_{n,k}$ gap and
+sampling without replacement give failure probability at most
+$e^{-\theta_{n,k}N}$.  A union bound over at most $2^n$ sets and $n+2$
+relevant consecutive pairs shows that, outside probability $\delta$, every
+admissible $A$ is empty, full, a singleton, or a co-singleton.
+
+Because $\cY$ contains the degree-one-unisolvent anchor $\cY_0$, every row
+relation lifts to the complete slice and the ambient matrix has the same real
+rank $r$.  Every coordinate is nonconstant on $\cY_0$; hence the two-value
+condition forces the corresponding rows to be constants, coordinates, or
+coordinate complements.  The rank-pooled depth-one protocol from
+Theorem~\ref{thm:quadratic-column-hls} gives the communication and rectangle
+bounds.
+\end{proof}
+
+\begin{theorem}[Deletion-robust linear sparse HLS]
+\label{thm:robust-linear-sparse-hls}
+If
+\[
+ N\ge
+ \frac8{\theta_{n,k}}
+ \left(n\log2+\log(n+2)+\log(1/\delta)\right),
+\]
+then, with probability at least $1-\delta$, every nontrivial $A$ and every
+consecutive pair $\{a,a+1\}$ have at least
+\[
+ \theta_{n,k}N/2
+\]
+witnesses $B\in\cY_1$ with $|A\cap B|\notin\{a,a+1\}$.  Consequently all
+conclusions of Theorem~\ref{thm:linear-sparse-hls} remain true after an
+adversary deletes any $D\subseteq\cY_1$ satisfying
+\[
+ |D|\le\theta_{n,k}N/4,
+\]
+while the anchor $\cY_0$ is retained.
+\end{theorem}
+
+\begin{proof}
+For fixed $A,a$, the number of witnesses in the without-replacement sample
+is hypergeometric with mean at least $\theta_{n,k}N$.  Its lower-tail
+Chernoff bound gives
+\[
+ \Pr[X<\theta_{n,k}N/2]\le e^{-\theta_{n,k}N/8}.
+\]
+Union bound over all $A,a$.  After the stated deletion, at least
+$\theta_{n,k}N/4$ witnesses remain, and the rank anchor is unchanged.
+\end{proof}
+
+We now remove the requirement that the deterministic rank anchor be
+protected.  The first input is an elementary minimum-support estimate for
+affine functions on a slice.  Put
+\[
+ \alpha_{n,k}=\frac{\binom{n-2}{k-1}}{\binom nk}
+ =\frac{k(n-k)}{n(n-1)}.
+\]
+
+\begin{lemma}[Affine slice support gap]
+\label{lem:affine-slice-support-gap}
+If a degree-at-most-one function $f$ is not identically zero on
+$\binom{[n]}k$, then
+\[
+ \bigl|\{B\in\tbinom{[n]}k:f(B)\ne0\}\bigr|
+ \ge\binom{n-2}{k-1}
+ =\alpha_{n,k}\binom nk.
+\]
+\end{lemma}
+
+\begin{proof}
+Write $f(B)=c+\sum_{i\in B}w_i$.  If all $w_i$ are equal, then $f$ is a
+nonzero constant on the slice and the claim is immediate.  Otherwise choose
+$i,j$ with $w_i\ne w_j$.  For every
+$U\in\binom{[n]\setminus\{i,j\}}{k-1}$, pair the two columns
+$U\cup\{i\}$ and $U\cup\{j\}$.  Their $f$-values differ by $w_i-w_j$, so at
+least one is nonzero.  The pairs are disjoint and there are
+$\binom{n-2}{k-1}$ of them.
+\end{proof}
+
+We use the following standard finite-population form of VC uniform
+convergence.  There is an absolute constant $C_{\rm VC}$ such that, for a
+finite set $\Omega$, a class $\mathcal R\subseteq2^\Omega$ of VC dimension at
+most $d$, and a uniform $N$-element subset $Y$, the inequalities
+\[
+ N\ge C_{\rm VC}\varepsilon^{-2}
+       \bigl(d\log(2/\varepsilon)+\log(2/\eta)\bigr)
+\]
+imply, with probability at least $1-\eta$,
+\[
+ \sup_{R\in\mathcal R}
+ \left|\frac{|R\cap Y|}{N}-\frac{|R|}{|\Omega|}\right|
+ \le\varepsilon.
+\]
+This is the classical VC uniform-convergence theorem, with the usual
+without-replacement concentration comparison
+\cite{VapnikChervonenkis,BardenetMaillard}.  For completeness, if $W$ is a
+$d$-dimensional function space, then the support ranges
+$\{\operatorname{supp}(f):0\ne f\in W\}$ have VC dimension at most $d$:
+shattering $d+1$ points would produce $d+1$ functions whose restrictions are
+nonzero multiples of the coordinate basis vectors, contradicting
+$\dim W=d$.
+
+\begin{theorem}[Anchor-free fully deletion-robust sparse HLS]
+\label{thm:anchor-free-robust-sparse-hls}
+Let $\cY$ be a uniformly random $N$-element subset of
+$\binom{[n]}k$.  If
+\[
+ N\ge\max\left\{
+ \frac8{\theta_{n,k}}
+ \left(n\log2+\log(n+2)+\log(2/\delta)\right),
+ \frac{4C_{\rm VC}}{\alpha_{n,k}^2}
+ \left(n\log(4/\alpha_{n,k})+\log(4/\delta)\right)
+ \right\},
+\]
+then, with probability at least $1-\delta$, the following holds
+simultaneously for every deletion set
+\[
+ D\subseteq\cY,
+ \qquad |D|\le\frac{N}{4}
+ \min\{\theta_{n,k},\alpha_{n,k}\}.
+\]
+For every $\cA\subseteq2^{[n]}$ and integer $a$ satisfying
+\[
+ |A\cap B|\in\{a,a+1\}
+ \qquad(A\in\cA,\ B\in\cY\setminus D),
+\]
+the matrix $M_{A,B}=|A\cap B|-a$, restricted to columns
+$\cY\setminus D$, satisfies, with $r=\rank_{\R}M$,
+\[
+ \Dcc(M)\le\lceil\log_2(r+1)\rceil+1,
+ \qquad
+ \rect(M)\ge\frac1{4(r+1)}.
+\]
+No distinguished subset of columns is protected from deletion.
+\end{theorem}
+
+\begin{proof}
+Apply the preceding VC estimate with error $\alpha_{n,k}/2$ to the support
+ranges of the $n$-dimensional degree-at-most-one slice space.  By
+Lemma~\ref{lem:affine-slice-support-gap}, except with probability
+$\delta/2$, every nonzero affine slice function is nonzero on at least
+$\alpha_{n,k}N/2$ sampled columns.
+
+The hypergeometric lower-tail argument in
+Theorem~\ref{thm:robust-linear-sparse-hls}, now with failure probability
+$\delta/2$, says that every nontrivial $A$ and consecutive pair have at least
+$\theta_{n,k}N/2$ witness columns.  Both events therefore hold with
+probability at least $1-\delta$.
+
+After any allowed deletion, every nonzero affine function remains nonzero on
+some retained column.  Hence $\cY\setminus D$ is degree-one unisolvent.
+Likewise every nontrivial set $A$ retains a witness outside every consecutive
+pair, so every admissible row set is empty, full, a singleton, or a
+co-singleton.  Unisolvence lifts all row relations to the complete slice and
+preserves the actual real rank.  The rank-pooled depth-one protocol used in
+Theorem~\ref{thm:quadratic-column-hls} finishes the proof.
+\end{proof}
+
+If $\beta n\le k\le(1-\beta)n$, then
+\[
+ \theta_{n,k}\ge\xi_{n,k}\ge2\beta^2/5.
+\]
+Thus for fixed $\delta<1$, Theorem~\ref{thm:linear-sparse-hls} proves the
+deterministic existence of universal sparse HLS families with only
+$O_\beta(n)$ columns.
+Theorem~\ref{thm:robust-linear-sparse-hls} uses
+$O(\beta^{-2}(n+\log(1/\delta)))$ detector columns and tolerates deletion of
+a $\beta^2/10$-fraction of them.
+Moreover
+\[
+ \alpha_{n,k}\ge\beta(1-\beta)\ge2\beta^2/5,
+\]
+so Theorem~\ref{thm:anchor-free-robust-sparse-hls} also uses
+$O(\beta^{-2}(n\log(1/\beta)+\log(1/\delta)))$ columns and tolerates deletion
+of a $\beta^2/10$-fraction of the entire column family, with no protected
+anchor.
+
+\subsection{Deterministic spectral and design columns}
+
+The preceding existence theorem can be replaced by a deterministic spectral
+hypothesis.  For \(B\in Y\subseteq\binom{[n]}k\), write \(x_B\in\{0,1\}^n\)
+for its incidence vector and define
+\[
+ \overline x_Y=\frac1{|Y|}\sum_{B\in Y}x_B,
+ \qquad
+ \Sigma_Y=\frac1{|Y|}\sum_{B\in Y}
+ (x_B-\overline x_Y)(x_B-\overline x_Y)^\top .
+\]
+Since every column has weight \(k\), one has
+\(\Sigma_Y\mathbf1=0\).
+
+\begin{theorem}[Deterministic covariance-gap sparse HLS]
+\label{thm:deterministic-spectral-sparse-hls}
+Assume \(n\ge4\), \(2\le k\le n-2\), \(Y\ne\varnothing\), and, for every
+\(v\perp\mathbf1\),
+\begin{equation}\label{eq:deterministic-covariance-gap}
+ v^\top\Sigma_Yv\ge\lambda\|v\|_2^2,
+ \qquad
+ \lambda>\frac{n}{8(n-2)}.
+\end{equation}
+Then the following holds simultaneously for every
+\(\cA\subseteq2^{[n]}\) and integer \(a\) satisfying
+\[
+ |A\cap B|\in\{a,a+1\}
+ \qquad(A\in\cA,\ B\in Y).
+\]
+For \(M_{A,B}=|A\cap B|-a\) and \(r=\rank_{\R}M\),
+\[
+ \Dcc(M)\le\lceil\log_2(r+1)\rceil+1,
+ \qquad
+ \rect(M)\ge\frac1{4(r+1)}.
+\]
+In particular, this is a deterministic theorem for every prescribed column
+family satisfying \eqref{eq:deterministic-covariance-gap}.
+\end{theorem}
+
+\begin{proof}
+Fix \(A\subseteq[n]\), put \(m=|A|\), and let
+\[
+ v_A=\mathbf1_A-\frac mn\mathbf1\in\mathbf1^\perp.
+\]
+Because \(\Sigma_Y\mathbf1=0\),
+\[
+ \Var_{B\in Y}|A\cap B|
+ =\mathbf1_A^\top\Sigma_Y\mathbf1_A
+ =v_A^\top\Sigma_Yv_A
+ \ge\lambda\frac{m(n-m)}n.
+\]
+If \(2\le m\le n-2\), then
+\[
+ \frac{m(n-m)}n\ge\frac{2(n-2)}n,
+\]
+so \eqref{eq:deterministic-covariance-gap} makes the variance strictly larger
+than \(1/4\).  This contradicts the fact that a random variable supported on
+\(\{a,a+1\}\) has variance at most \(1/4\).  Hence every admissible \(A\) is
+empty, full, a singleton, or a co-singleton.
+
+The same spectral gap proves degree-one unisolvence without a separate
+anchor.  Indeed, suppose
+\[
+ f(B)=c+w^\top x_B
+\]
+vanishes on \(Y\).  Writing
+\(w=w_0+t\mathbf1\) with \(w_0\perp\mathbf1\), the empirical variance of
+\(f\) is zero, whereas \eqref{eq:deterministic-covariance-gap} gives
+\[
+ 0=w_0^\top\Sigma_Yw_0\ge\lambda\|w_0\|_2^2.
+\]
+Thus \(w_0=0\), and \(f\) is constant on the complete weight-\(k\) slice.
+Its value on the nonempty set \(Y\) is zero, so it vanishes on the complete
+slice.
+
+Consequently every row relation on \(Y\) lifts to the complete slice and the
+ambient and restricted matrices have the same real rank.  The positive gap
+also makes every coordinate nonconstant on \(Y\).  Hence the two-value
+condition forces singleton rows to be coordinates, co-singleton rows to be
+coordinate complements, and the remaining classified rows to be constants,
+all with Boolean extensions to the complete slice.  The rank-pooled
+depth-one protocol from Theorem~\ref{thm:quadratic-column-hls} gives the
+communication bound, and a largest transcript rectangle gives the stated
+density.
+\end{proof}
+
+A large, standard source of deterministic spectral families is furnished by
+block designs.
+
+\begin{corollary}[\(2\)-design columns]
+\label{cor:two-design-spectral-hls}
+Let \(Y\) be the block family of a simple \(2\)-\((n,k,\lambda_2)\) design.
+If
+\begin{equation}\label{eq:design-spectral-threshold}
+ 8k(n-k)(n-2)>n^2(n-1),
+\end{equation}
+then all conclusions of
+Theorem~\ref{thm:deterministic-spectral-sparse-hls} hold.
+\end{corollary}
+
+\begin{proof}
+Write \(b=|Y|\) and let \(r_2\) be the number of blocks through one point.
+The design identities give
+\[
+ \frac{r_2}{b}=\frac kn,
+ \qquad
+ \frac{\lambda_2}{b}=\frac{k(k-1)}{n(n-1)}.
+\]
+It follows entrywise that
+\[
+ \Sigma_Y=\frac{k(n-k)}{n(n-1)}
+ \left(I-\frac1nJ\right).
+\]
+Thus the eigenvalue on \(\mathbf1^\perp\) is
+\(k(n-k)/[n(n-1)]\), and
+\eqref{eq:design-spectral-threshold} is exactly the strict threshold in
+\eqref{eq:deterministic-covariance-gap}.
+\end{proof}
+
+The design corollary yields an explicit information-theoretically minimal
+family on an infinite sequence of central layers.
+
+\begin{corollary}[Explicit Sylvester--Hadamard columns]
+\label{cor:sylvester-hadamard-sparse-hls}
+For every \(t\ge3\), put
+\[
+ n=2^t-1,
+ \qquad
+ k=2^{t-1}-1.
+\]
+There is an explicit family
+\[
+ Y_t\subseteq\binom{[n]}k,
+ \qquad |Y_t|=n,
+\]
+for which all conclusions of
+Theorem~\ref{thm:deterministic-spectral-sparse-hls} hold simultaneously for
+every adjacent-two-value row family.  The column count \(n\) is minimal for
+degree-one unisolvence.
+\end{corollary}
+
+\begin{proof}
+Let \(H_t\) be the Sylvester Hadamard matrix, recursively defined by
+\[
+ H_1=\begin{pmatrix}1&1\\1&-1\end{pmatrix},
+ \qquad
+ H_{t+1}=\begin{pmatrix}H_t&H_t\\H_t&-H_t\end{pmatrix}.
+\]
+It has order \(4u=2^t\), where \(u=2^{t-2}\), and its first row and column are
+all \(+1\).  Delete that row and column.  For every remaining row, take the
+set of positions carrying \(+1\).  Orthogonality shows that every block has
+size \(2u-1\), and every two blocks meet in exactly \(u-1\) points.  Hence
+these \(4u-1=n\) blocks form a symmetric
+\(2\)-\((4u-1,2u-1,u-1)\) design.
+
+Its covariance eigenvalue on \(\mathbf1^\perp\) is
+\[
+ \frac{k(n-k)}{n(n-1)}=\frac{u}{4u-1}.
+\]
+For \(u\ge2\),
+\[
+ \frac{u}{4u-1}>\frac{4u-1}{8(4u-3)}
+\]
+because the difference after clearing positive denominators is
+\(16u^2-16u-1>0\).  Theorem~\ref{thm:deterministic-spectral-sparse-hls}
+therefore applies.  Finally, the degree-at-most-one slice space has dimension
+\(n\), so an unisolvent family cannot have fewer than \(n\) columns.
+\end{proof}
+
+There is an analogous minimal sparse family for every bounded-alphabet
+complete product.  For
+$\Omega_{\rm prod}=\prod_i[m_i]$, decompose each one-coordinate function
+space into constants and its $(m_i-1)$-dimensional mean-zero part.  The
+degree-at-most-$s$ product space then has dimension
+\begin{equation}\label{eq:product-degree-dimension}
+ d_s^{\rm prod}
+ =\sum_{\substack{J\subseteq[n]\\|J|\le s}}
+   \prod_{i\in J}(m_i-1).
+\end{equation}
+It is invariant under the transitive action of $\prod_iS_{m_i}$.
+
+\begin{corollary}[Minimal sparse bounded-product columns]
+\label{cor:dpp-product}
+Sample $Y$ from the rank-$d_s^{\rm prod}$ projection DPP of the
+degree-at-most-$s$ space on $\Omega_{\rm prod}$.  With probability one,
+\[
+ |Y|=d_s^{\rm prod}
+\]
+and every Boolean degree-$s$ row family restricted to $Y$ satisfies the
+communication bound in Theorem~\ref{thm:low-degree-product-domain}, with its
+actual restricted real rank.
+\end{corollary}
+
+\begin{proof}
+Apply Theorems~\ref{thm:dpp-unisolvent} and
+\ref{thm:unisolvent-transfer}, using
+\eqref{eq:product-degree-dimension}.
+\end{proof}
+
+For fixed $Q,s$,
+\[
+ d_s^{\rm prod}
+ \le\sum_{j=0}^s\binom nj(Q-1)^j
+ =O_{Q,s}(n^s),
+\]
+whereas $|\Omega_{\rm prod}|\ge2^n$.  Thus this construction is again
+information-theoretically minimal and exponentially sparse.
+
+For fixed $s$, the uniform Johnson construction uses $O_s(n^s\log n)$
+columns.  A middle Johnson layer has $\Theta(2^n/\sqrt n)$ columns, so the retained family is
+exponentially sparse.  Taking any fixed $\delta<1$ also proves deterministic
+existence of such sparse families.  More basically, every $d$-dimensional
+function space has some unisolvent set of exactly $d$ points, by choosing a
+basis of its evaluation functionals.  Projection-DPP sampling attains this
+minimum exactly, while the uniform theorem gives an elementary
+without-replacement construction at logarithmic oversampling.
+
+\section{The product of Johnson middle layers}
+
+Let
+\[
+ [d]=C_1\sqcup\cdots\sqcup C_m,
+ \qquad |C_i|=n,
+\]
+where $n\ge4$ is even, and define
+\begin{equation}\label{eq:product-family}
+ \cY_{n,m}=\{B\subseteq[d]:|B\cap C_i|=n/2\text{ for all }i\}.
+\end{equation}
+
+\begin{theorem}[Product-Johnson restricted Log-Rank theorem]
+\label{thm:product}
+Let $\cA\subseteq2^{[d]}$ be nonempty and suppose
+\[
+ |A\cap B|\in\{a,a+1\}
+ \qquad(A\in\cA,\ B\in\cY_{n,m}).
+\]
+Then the matrix \eqref{eq:matrix} satisfies
+\[
+ \rank_{\R}M\le d+1,
+ \qquad
+ \rect(M)\ge\frac1{4(d+1)},
+ \qquad
+ \Dcc(M)\le\lceil\log_2(\rank_{\R}M+1)\rceil+4.
+\]
+\end{theorem}
+
+\begin{proof}
+Choose $B$ uniformly from $\cY_{n,m}$.  The restrictions $B\cap C_i$ are
+independent uniform middle-layer sets.  Put $s_i=|A\cap C_i|$.  The
+hypergeometric variance formula gives
+\begin{equation}\label{eq:block-var}
+ \Var|A\cap B|
+ =\sum_{i=1}^m\frac{s_i(n-s_i)}{4(n-1)}.
+\end{equation}
+By Lemma~\ref{lem:two-point-var}, the left side is at most $1/4$.
+
+Let
+\[
+ h(A)=\sum_i\min\{s_i,n-s_i\},
+\]
+the Hamming distance from $A$ to the nearest union of blocks.  If
+$h(A)\ge2$, then either two errors occur in one block or errors occur in at
+least two blocks.  In the first case the corresponding numerator in
+\eqref{eq:block-var} is at least $2(n-2)$; in the second it is at least
+$2(n-1)$.  Here we use that $r(n-r)$ is increasing for
+$0\le r\le n/2$, so additional error units can only increase the relevant
+lower bound.  Since $n\ge4$, both cases make \eqref{eq:block-var} strictly
+larger than $1/4$, a contradiction.  Therefore $h(A)\le1$.
+
+Write
+\[
+ A=C_J\triangle E,
+ \qquad C_J=\bigcup_{i\in J}C_i,
+ \qquad E\in\{\varnothing,\{1\},\ldots,\{d\}\}.
+\]
+Pigeonhole the rows by $E$, retaining at least a $1/(d+1)$ fraction.  If
+$E=\varnothing$, every retained row has constant intersection with every
+column because each block count is fixed.  If $E=\{e\}$, additionally fix
+whether $e\in B$; exactly half the columns lie in each class.  Every retained
+row is now constant on the retained columns.  Keep the larger of the rows
+with constant value $a$ and those with constant value $a+1$.  The total loss
+is at most $4(d+1)$.
+
+The rank assertion follows from \eqref{eq:rank-factorization}.
+\end{proof}
+
+\subsection{A rank-sensitive one-way protocol}
+
+The row classification in the proof gives a full protocol, not only one
+large rectangle.  If $E=\varnothing$, the row is constant.  If
+$E=\{e\}$ and the block containing $e$ is not in $J$, then
+\[
+ |A\cap B|=|J|n/2+\1_{\{e\in B\}},
+\]
+so the nonconstant matrix row is exactly the coordinate function
+$B\mapsto\1_{\{e\in B\}}$.  If that block is in $J$, then
+\[
+ |A\cap B|=|J|n/2-\1_{\{e\in B\}},
+\]
+and the nonconstant row is the complement of the coordinate function.
+
+Let $S\subseteq[d]$ be the coordinates occurring in nonconstant rows and
+put $k=|S|$.  Alice can send one of two constant messages, or the index of
+$e\in S$ together with the complement bit.  Thus there is a one-way protocol
+with at most $2k+2$ messages.
+
+We next relate $k$ to the actual real rank $r=\rank_{\R}M$.  Let $X_S$ be
+the matrix whose rows are the coordinate functions
+$B\mapsto\1_{\{e\in B\}}$, $e\in S$.  If $f$ blocks are fully contained in
+$S$, then
+\begin{equation}\label{eq:coordinate-rank}
+ \rank X_S=
+ \begin{cases}
+ k,&f=0,\\
+ k-f+1,&f>0.
+ \end{cases}
+\end{equation}
+To see this, vary one middle-layer block while fixing all other blocks.  A
+linear combination of coordinate functions is constant on that block only
+when all its coefficients are equal, by exchanging one selected and one
+unselected coordinate.  A partially represented block therefore contributes
+no relation.  Each fully represented block contributes its fixed-sum
+relation, and the $f$ block sums span one common constant direction.
+
+Since $f\le k/n$,
+\begin{equation}\label{eq:k-rankx}
+ \rank X_S\ge(1-1/n)k.
+\end{equation}
+Choose one nonconstant row of $M$ for every $e\in S$.  The resulting matrix
+is obtained from $X_S$ by invertible row sign changes and a rank-one constant
+perturbation.  Hence
+\[
+ r\ge\rank X_S-1\ge(1-1/n)k-1,
+\]
+and, because $n\ge4$,
+\begin{equation}\label{eq:k-rank}
+ k\le\frac n{n-1}(r+1)\le\frac43(r+1).
+\end{equation}
+Encoding the $2k+2$ possible one-way messages costs at most
+$\lceil\log_2(r+1)\rceil+3$ bits, which implies the stated bound.
+
+\begin{corollary}[Optimality of the logarithmic order]
+\label{cor:optimal}
+For fixed even $n\ge4$ and growing $m$, the order
+$\Dcc(M)=\Theta(\log\rank M)$ in Theorem~\ref{thm:product} is best possible.
+\end{corollary}
+
+\begin{proof}
+Take $\cA=\{\{e\}:e\in[d]\}$ and $a=0$.  Then $M$ is the coordinate
+incidence matrix of $\cY_{n,m}$.  Formula \eqref{eq:coordinate-rank} with
+all $m$ blocks fully represented gives
+\[
+ \rank_{\R}M=d-m+1.
+\]
+Every deterministic $c$-bit protocol partitions a Boolean matrix into at
+most $2^c$ monochromatic rectangles, each of real rank at most one.  Hence
+$c\ge\log_2\rank M$.  Theorem~\ref{thm:product} supplies the matching upper
+bound up to an additive constant.
+\end{proof}
+
+The same proof gives a parameterized theorem for arbitrary products of
+Johnson layers.  Let the blocks have sizes $n_i\ge2$, choose
+$1\le k_i\le n_i-1$, and put
+\[
+ \cY(\mathbf n,\mathbf k)
+ =\{B\subseteq[d]:|B\cap C_i|=k_i\text{ for all }i\}.
+\]
+For $0\le s_i\le n_i$, define
+\[
+ V(\mathbf s)=
+ \sum_i
+ \frac{s_i(n_i-s_i)k_i(n_i-k_i)}{n_i^2(n_i-1)},
+ \qquad
+ h(\mathbf s)=\sum_i\min\{s_i,n_i-s_i\},
+\]
+and the exact weighted tube radius
+\begin{equation}\label{eq:product-tube}
+ t(\mathbf n,\mathbf k)
+ =\max\{h(\mathbf s):V(\mathbf s)\le1/4\}.
+\end{equation}
+
+\begin{theorem}[General product-Johnson theorem]
+\label{thm:general-product}
+If \eqref{eq:two-level} holds with
+$\cB=\cY(\mathbf n,\mathbf k)$ and
+$t=t(\mathbf n,\mathbf k)$, then
+\[
+ \rank_{\R}M\le d+1,
+ \qquad
+ \rect(M)\ge
+ \frac1{2^{t+1}\sum_{j=0}^t\binom dj}.
+\]
+\end{theorem}
+
+\begin{proof}
+The block restrictions are independent and the hypergeometric variance is
+exactly $V(\mathbf s)$.  Lemma~\ref{lem:two-point-var} therefore forces
+$h(\mathbf s)\le t$.  Write each row as a block union symmetric-differenced
+with an error set of size at most $t$.  Pigeonhole the error set, then fix its
+exact trace on the right; this costs at most
+$2^t\sum_{j\le t}\binom dj$.  Every retained row is now constant across the
+retained columns, and a final two-colour pigeonhole completes the proof.
+\end{proof}
+
+The parameterized theorem also gives a communication protocol.
+
+\begin{theorem}[Protocol for general product layers]
+\label{thm:general-product-protocol}
+Let $r=\rank_{\R}M$ and $t=t(\mathbf n,\mathbf k)$.  If $t=0$, then $M$ has
+only constant rows.  For every $t\ge1$,
+\[
+ \Dcc(M)=O\bigl(t\log(r+2)+\log(t+2)\bigr).
+\]
+In particular, if $t\le(\log(r+2))^C$, then the Log-Rank Conjecture holds for
+this product-layer matrix.
+\end{theorem}
+
+\begin{proof}
+Every row has a sparse affine representation on the column family,
+\begin{equation}\label{eq:sparse-row-rep}
+ M_A(B)=q_A+\sum_{e\in E_A}\sigma_{A,e}\1_{\{e\in B\}},
+ \qquad |E_A|\le t,
+\end{equation}
+where $\sigma_{A,e}\in\{-1,1\}$ and $q_A\in\Z$.  The two-level condition
+forces $q_A\in[-t,t+1]$.
+
+Choose $r$ matrix rows spanning the row space, and let $S_0$ be the union of
+their error supports.  Then $|S_0|\le rt$.  We claim that the union $S$ of
+the error supports of all rows satisfies
+\begin{equation}\label{eq:used-coordinate-bound}
+ |S|\le2|S_0|\le2rt.
+\end{equation}
+
+To prove the claim, consider the evaluation map from affine coordinate forms
+to functions on $\cY(\mathbf n,\mathbf k)$.  Its kernel consists exactly of
+forms whose coefficients are constant on each block, with the constant term
+chosen to cancel $\sum_i\alpha_i k_i$.  Indeed, varying a single block and
+exchanging one selected and one unselected coordinate forces all
+coefficients in that block to be equal.
+
+For an arbitrary row, subtract a linear combination of the chosen basis-row
+representations.  The difference lies in this kernel.  If a block contains a
+new error coordinate outside $S_0$, its kernel coefficient is nonzero;
+therefore every coordinate of that block outside $S_0$ must belong to the
+row's error set.  Use the canonical nearest-block-union representation, so
+every block contributes at most half of its coordinates to an error set.
+Consequently such a block has at most as many coordinates outside $S_0$ as
+inside $S_0$.  Summing over the disjoint blocks that contain new coordinates
+proves \eqref{eq:used-coordinate-bound}.
+
+Alice now sends $q_A$, the subset $E_A\subseteq S$, and its signs.  The
+number of possible messages is at most
+\[
+ (2t+2)\sum_{j=0}^t\binom{|S|}{j}2^j.
+\]
+Using $|S|\le2rt$ and the standard binomial-sum estimate gives the claimed
+communication bound.  Bob evaluates \eqref{eq:sparse-row-rep} from his
+column.
+\end{proof}
+
+\subsection{All interior product layers}
+
+The strongest product theorem does not require a variance-radius estimate.
+
+\begin{theorem}[Interior product-Johnson Log-Rank theorem]
+\label{thm:interior-product}
+Assume
+\[
+ 2\le k_i\le n_i-2
+ \qquad\text{for every block }i.
+\]
+If \eqref{eq:two-level} holds with
+$\cB=\cY(\mathbf n,\mathbf k)$, then
+\[
+ \rect(M)\ge\frac1{4(d+1)},
+ \qquad
+ \Dcc(M)\le\lceil\log_2(\rank_{\R}M+1)\rceil+4.
+\]
+The logarithmic order is optimal up to an additive constant.
+\end{theorem}
+
+\begin{proof}
+Fix a row $A$ and put $s_i=|A\cap C_i|$.  As $B_i$ ranges over all
+$k_i$-subsets of $C_i$, the possible values of $|A\cap B_i|$ are all integers
+in the interval
+\begin{equation}\label{eq:local-range}
+ \left[
+  \max\{0,k_i-(n_i-s_i)\},\ \min\{k_i,s_i\}
+ \right].
+\end{equation}
+The choices in distinct blocks are independent, so the range of
+$|A\cap B|$ is the sum of these integer intervals.  Since the total range has
+size at most two, the sum of their widths is at most one.
+
+For $2\le k_i\le n_i-2$, the interval in \eqref{eq:local-range} has width zero exactly when
+$s_i\in\{0,n_i\}$, and has width one only when
+$s_i\in\{1,n_i-1\}$.  Indeed, if $2\le s_i\le n_i-2$ and
+$s_i+k_i\le n_i$, its lower endpoint is zero and its upper endpoint is at
+least two; if $s_i+k_i>n_i$, its width is
+$n_i-\max\{s_i,k_i\}\ge2$.
+
+Consequently all blocks are empty or full in $A$, except possibly one block
+where $A$ differs from empty or full in one coordinate.  Thus every row is
+constant, a coordinate function, or its complement.  The rectangle proof of
+Theorem~\ref{thm:product} applies verbatim.
+
+For the rank-sensitive protocol, let $S$ be the set of queried coordinates.
+The coordinate-rank calculation \eqref{eq:coordinate-rank} remains valid for
+unequal blocks.  Since every block has size at least four, the number of fully
+represented blocks is at most $|S|/4$, and hence
+$\rank X_S\ge3|S|/4$.  The rank-one perturbation argument then gives
+$|S|\le4(r+1)/3$, completing the protocol proof.  The singleton-row example
+again proves optimality.
+\end{proof}
+
+In the language of Theorem~\ref{thm:atomic-transfer}, interior Johnson factors
+have atom-growth exponent $\alpha=1$ and constant $C\le4/3$: the centered
+rank of $k$ queried coordinates is $k$ unless the entire block is queried,
+in which case it is $k-1\ge3k/4$.
+
+\begin{proposition}[Sharp boundary obstruction]\label{prop:boundary}
+If blocks of weight one are allowed, the class contains every Boolean matrix
+with the corresponding number of columns.
+\end{proposition}
+
+\begin{proof}
+Take one block $C$ of size $N$ with $k=1$, so columns are the singletons
+$\{j\}$, $j\in C$.  Given any Boolean matrix with these $N$ columns, identify
+each row with the subset $A\subseteq C$ of its one-entries.  Then
+\[
+ |A\cap\{j\}|\in\{0,1\}
+\]
+and the resulting adjacent-two-value matrix is the original matrix.  The case
+$k=N-1$ follows by complementation.
+\end{proof}
+
+\section{Products of interior multislices}
+
+The product/rank argument is not specific to two-color slices.  For a vector
+of positive integers $\boldsymbol\kappa=(\kappa_1,\ldots,\kappa_\ell)$ with
+sum $N$, define the multislice
+\[
+ \Omega(\boldsymbol\kappa)
+ =\left\{x\in[\ell]^N:
+   |\{p:x_p=c\}|=\kappa_c\text{ for every }c\right\}.
+\]
+A function has degree at most one if it lies in the affine span of the
+coordinate-color indicators $1_{\{x_p=c\}}$.
+
+Consider a product of multislices
+$\Omega=\prod_{i=1}^m\Omega(\boldsymbol\kappa^{(i)})$, each with alphabet
+size at most $Q$.  A Boolean matrix with column set $\Omega$ is called
+row-degree-one if every row is a Boolean degree-one function on this product.
+
+\begin{theorem}[Interior multislice product theorem]
+\label{thm:multislice}
+Assume every color multiplicity in every factor is at least two.  If $M$ is a
+row-degree-one Boolean matrix on $\Omega$, then
+\[
+ \Dcc(M)\le
+ \left\lceil\log_2(\rank_{\R}M+1)\right\rceil+Q+4.
+\]
+For fixed alphabet bound $Q$, this is optimal-order Log-Rank.
+\end{theorem}
+
+\begin{proof}
+Filmus--Ihringer show that a Boolean degree-one function on an interior
+multislice depends only on the color of one position
+\cite[Lemma~8.1]{FilmusIhringer}.  A Boolean degree-one function on a product
+is a sum of one-factor functions.  Two nonconstant factors would produce at
+least three sums, so every nonconstant row depends on one position in one
+factor and has the form
+\[
+ x\longmapsto1_{\{x_p\in J\}}
+\]
+or its complement, for a nontrivial color subset $J$.  Up to complement there
+are at most $2^{Q-1}-1$ atoms per position.
+
+Let $P$ be the number of positions used by the matrix rows.  We claim
+\begin{equation}\label{eq:multislice-position-rank}
+ P\le2(\rank_{\R}M+1).
+\end{equation}
+Choose one atom for each used position.  Within one multislice factor, an
+additive coordinate form that vanishes identically has the form
+$g_p(c)=a_p+h_c$, with its constants satisfying the single histogram
+relation.  This follows by exchanging the colors at two positions.  Hence a
+proper subset of positions contributes independent nonconstant directions;
+if all $N$ positions are used, the centered rank is at least
+$N-\ell\ge N/2$, since every color multiplicity is at least two.  Across
+different factors the centered function spaces form a direct sum.  Therefore
+the centered rank of one selected atom per used position is at least $P/2$.
+
+Replacing complements by positive atoms enlarges the row span by at most the
+constant function, so \eqref{eq:multislice-position-rank} follows.  The total
+number of used atoms is at most $2^{Q-1}P\le2^Q(r+1)$.  Alice sends the atom
+index and complement bit, proving the stated protocol bound.
+\end{proof}
+
+Thus interior multislice factors satisfy the atomic growth hypothesis with
+$\alpha=1$ and $C\le2^Q$.
+
+\begin{proposition}[Sharp multislice boundary]
+If a color of multiplicity one is allowed, row-degree-one matrices on a
+single multislice include every Boolean matrix with $N$ columns.
+\end{proposition}
+
+\begin{proof}
+Use the binary multislice with histogram $(1,N-1)$.  A column is identified
+by the unique position carrying the rare color.  For any subset
+$J\subseteq[N]$, the function
+\[
+ x\longmapsto\sum_{p\in J}1_{\{x_p=\text{rare}\}}
+\]
+is Boolean and has degree one; these functions realize arbitrary row
+supports.
+\end{proof}
+
+\section{Sparsity and separation from affine sections}
+
+The family \eqref{eq:product-family} lies in the global middle layer and has
+relative density
+\begin{equation}\label{eq:relative-density}
+ \frac{|\cY_{n,m}|}{\binom d{d/2}}
+ =\frac{\binom n{n/2}^m}{\binom{mn}{mn/2}}.
+\end{equation}
+For fixed $n$ and $m\to\infty$, Stirling's formula shows that
+\eqref{eq:relative-density} is $\exp(-\Theta_n(d))$.  For $n=4$ it is
+\[
+ \Theta\bigl(\sqrt m(3/8)^m\bigr).
+\]
+
+The family is also generally not a complete affine-code section.  For two
+blocks of size four, label each block by $\{1,2,3,4\}$.  In the first block
+take
+\[
+ \{1,2\},\quad\{1,3\},\quad\{2,3\},
+\]
+whose XOR is empty.  In the second take
+\[
+ \{1,2\},\quad\{1,3\},\quad\{1,4\},
+\]
+whose XOR is the full block.  Pairing corresponding choices gives three
+product columns with triple XOR of block weights $(0,4)$.  This XOR is still
+a global middle-layer set but is not in the product family.  Any binary
+affine coset containing the three columns contains their triple XOR, so its
+intersection with the middle layer cannot equal $\cY_{4,2}$.
+
+\section{Boolean tubes around a defect space}
+
+Let $D\le\R^d$.  Define its Boolean templates
+\[
+ \cC(D)=\{C\subseteq[d]:\1_C\in D\}
+\]
+and the Hamming distance to that family
+\[
+ h_D(A)=\min_{C\in\cC(D)}|A\triangle C|.
+\]
+For $\lambda>0$, define the exact Boolean tube radius
+\begin{equation}\label{eq:tube-radius}
+ \tau_\lambda(D)=
+ \max\left\{h_D(A):
+  \dist(\1_A,D)^2\le\frac1{4\lambda}\right\}.
+\end{equation}
+The maximum exists because the Boolean cube is finite and $\varnothing$ is a
+template.
+
+A convenient sufficient estimate is a Boolean Hamming margin
+\begin{equation}\label{eq:boolean-margin}
+ \dist(\1_A,D)^2\ge\gamma h_D(A),
+\end{equation}
+which implies
+\[
+ \tau_\lambda(D)\le\left\lfloor(4\lambda\gamma)^{-1}\right\rfloor.
+\]
+The exact radius is often sharper than the global margin.  For the span of
+one all-ones vector it recovers the distinction between singleton and
+two-coordinate errors that is lost in a uniform factor-$1/2$ estimate.
+
+\section{Integer generator entropy}
+
+Suppose nonzero $z_1,\ldots,z_s\in\Z^d$ span $D$ over $\R$.  Put
+\[
+ e_i=\|z_i\|_2^2,
+ \qquad h_i=\|z_i\|_1.
+\]
+For $u\ge0$ and an integer $h\ge1$, define
+\[
+ \phi(u,h)=
+ \begin{cases}
+ H_2(4u)+4u\log h,&u\le1/8,\\
+ \log(h+1),&u>1/8,
+ \end{cases}
+\]
+where $H_2$ is binary entropy in natural units.
+
+\begin{lemma}[Integer entropy envelope]\label{lem:entropy-envelope}
+Let $Z$ be integer-valued, supported on at most $h+1$ consecutive integer
+values, and suppose $\Var Z\le u$.  Then $H(Z)\le\phi(u,h)$.
+\end{lemma}
+
+\begin{proof}
+Let $p$ be the largest atom.  For an independent copy $Z'$, the identity
+\[
+ \Var Z=\frac12\mathbb E(Z-Z')^2
+\]
+shows that $\Var Z\ge p(1-p)$.  Moreover, if $p\le1/2$, then
+\[
+ \Var Z\ge\frac12\Pr[Z\ne Z']
+ =\frac12\left(1-\sum_x\Pr[Z=x]^2\right)\ge1/4.
+\]
+Consequently, when $u\le1/8$, one has $p>1/2$ and
+$1-p\le2u\le4u$.  Entropy is maximized by spreading the remaining mass
+uniformly on the other $h$ support points, giving
+$H(Z)\le H_2(4u)+4u\log h$.  For $u>1/8$, use
+$H(Z)\le\log(h+1)$.
+\end{proof}
+
+Let $X=\1_B$ for a uniform random column $B\in\cB$, and suppose
+\begin{equation}\label{eq:inside-upper}
+ v^\mathsf T\Sigma v\le\kappa\|v\|_2^2
+ \qquad(v\in D),
+\end{equation}
+where $\Sigma=\Cov(X)$.  Define
+\begin{equation}\label{eq:psi}
+ \Psi_Z=\sum_{i=1}^s\phi(\kappa e_i,h_i).
+\end{equation}
+The integer statistics $T_i=z_i\cdot X$ have variance at most $\kappa e_i$
+and range size at most $h_i+1$.  Entropy subadditivity gives
+\begin{equation}\label{eq:joint-atom}
+ \max_t\Pr[(T_1,\ldots,T_s)=t]\ge e^{-\Psi_Z}.
+\end{equation}
+
+\section{The spectral--lattice rectangle theorem}
+
+\begin{theorem}[Spectral--lattice rectangle theorem]
+\label{thm:master}
+Let $\cA,\cB\subseteq2^{[d]}$ be nonempty and satisfy
+\eqref{eq:two-level}.  Let $D\le\R^d$ be spanned by nonzero integer vectors
+$z_1,\ldots,z_s$.  Suppose
+\begin{equation}\label{eq:outside-gap}
+ \Sigma\succeq\lambda P_{D^\perp}
+\end{equation}
+and \eqref{eq:inside-upper}.  Put $t=\tau_\lambda(D)$ and
+$S(d,t)=\sum_{j=0}^t\binom dj$.  Then
+\begin{equation}\label{eq:master-bound}
+ \rect(M)\ge
+ \frac{e^{-\Psi_Z}}{2^{t+1}S(d,t)}.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+For fixed $A\in\cA$, Lemma~\ref{lem:two-point-var} and
+\eqref{eq:outside-gap} give
+\[
+ \lambda\dist(\1_A,D)^2
+ \le\1_A^\mathsf T\Sigma\1_A
+ =\Var|A\cap B|
+ \le1/4.
+\]
+By the definition of $t$, choose $C(A)\in\cC(D)$ and $E(A)$ with
+\[
+ A=C(A)\triangle E(A),
+ \qquad |E(A)|\le t.
+\]
+There are at most $S(d,t)$ error sets.  Retain a largest error fiber.
+
+For the fixed error $E$, refine $\cB$ to a largest atom of
+\[
+ (z_1\cdot\1_B,\ldots,z_s\cdot\1_B, B\cap E).
+\]
+By \eqref{eq:joint-atom}, this retains at least
+$e^{-\Psi_Z}2^{-t}$ of the columns.  Since every template is a real linear
+combination of the generators, the generator statistics fix
+$|C(A)\cap B|$.  The exact trace on $E$ and the identity
+\[
+ |(C\triangle E)\cap B|+2|C\cap E\cap B|
+ =|C\cap B|+|E\cap B|
+\]
+then fix $|A\cap B|$ for every retained row.  Retain the larger row colour,
+losing at most two.  Multiplying the losses gives
+\eqref{eq:master-bound}.
+\end{proof}
+
+\begin{remark}[Dimension-free character]
+Theorem~\ref{thm:master} has no explicit factor exponential in $\dim D$ or in
+$|\cC(D)|$.  Arithmetic complexity is paid through the entropy of the
+generator statistics.
+\end{remark}
+
+If $E_2=\sum_i\|z_i\|_2^2$,
+$H=\max(1,\max_i\|z_i\|_1)$, and $0<\kappa\le1$, then
+\begin{equation}\label{eq:coarse-psi}
+ \Psi_Z\le
+ O\left(\kappa E_2\log\frac{e(H+1)}{\kappa}\right),
+\end{equation}
+with the convention that the right side is zero for $\kappa=0$.
+
+Indeed, put $u_i=\kappa e_i$ and $U=\sum_i u_i=\kappa E_2$.
+For $u_i\le1/8$, the bound
+$H_2(x)\le x\log(e/x)$ gives
+\[
+ \phi(u_i,h_i)\le4u_i\log\frac{eH}{u_i}.
+\]
+Since the number of nonzero integer generators is at most $E_2$, concavity
+of $x\mapsto x\log(eH/x)$ bounds the sum of these terms by
+$O(U\log(eH/\kappa))$.  There are at most $8U$ indices with
+$u_i>1/8$, and each contributes at most $\log(H+1)$.  This proves
+\eqref{eq:coarse-psi}.
+
+\section{Robust transfer from a nearby rational subspace}
+
+The exact arithmetic hypothesis admits a perturbative extension.  Let
+$D_0$ be the true spectral defect space and $D_\mathbb Q$ an
+integer-generated subspace, with projections $P_0,P_\mathbb Q$ satisfying
+\begin{equation}\label{eq:projector-close}
+ \|P_0-P_\mathbb Q\|_{\mathrm{op}}\le\varepsilon.
+\end{equation}
+Assume $D_0$ has outside gap $\lambda$ and Boolean margin $\gamma_0$, while
+$D_\mathbb Q$ has Boolean margin $\gamma_\mathbb Q$.  Suppose covariance on
+$D_0$ is at most $\kappa$.
+
+Every Boolean template in $D_0$ lies within Euclidean distance
+$\varepsilon\sqrt d$ of $D_\mathbb Q$, hence within Hamming distance
+\begin{equation}\label{eq:rational-error}
+ s=\left\lfloor\frac{\varepsilon^2d}{\gamma_\mathbb Q}\right\rfloor
+\end{equation}
+of an exact Boolean template there.  Moreover, since
+$\|\Sigma\|_{\mathrm{op}}\le\operatorname{tr}\Sigma\le d/4$, covariance on
+$D_\mathbb Q$ is at most
+\begin{equation}\label{eq:kappa-transfer}
+ \kappa_\mathbb Q=2\kappa+\frac d2\varepsilon^2.
+\end{equation}
+
+\begin{theorem}[Robust rational transfer]\label{thm:robust}
+Under the preceding assumptions, let
+\[
+ t=\left\lfloor(4\lambda\gamma_0)^{-1}\right\rfloor,
+ \qquad T=t+s.
+\]
+If $z_i$ are integer generators for $D_\mathbb Q$ and $\Psi_\mathbb Q$ is
+defined using $\kappa_\mathbb Q$, then
+\[
+ \rect(M)\ge
+ \frac{e^{-\Psi_\mathbb Q}}
+ {2^{T+1}\sum_{j=0}^T\binom dj}.
+\]
+\end{theorem}
+
+\begin{proof}
+The outside gap and margin put every row within $t$ coordinates of a Boolean
+template in $D_0$.  Projector closeness and the rational margin put that
+template within $s$ coordinates of one in $D_\mathbb Q$.  The Hamming
+triangle inequality gives total error at most $T$.  The covariance estimate
+\eqref{eq:kappa-transfer} permits the extraction argument of
+Theorem~\ref{thm:master} on the rational space with the enlarged error
+budget; the outside-gap step has already been supplied by $D_0$.
+\end{proof}
+
+For an orthonormal basis $w_1,\ldots,w_q$ of $D_0$ with rational
+approximants $r_i=z_i/M_i$ satisfying $\|r_i-w_i\|_2\le\eta$ and
+$M_i\le H_0$, one has, when $\eta\sqrt q<1$,
+\[
+ \|P_0-P_\mathbb Q\|_{\mathrm{op}}
+ \le\frac{2\eta\sqrt q}{1-\eta\sqrt q},
+ \qquad
+ \sum_i\|z_i\|_2^2\le qH_0^2(1+\eta)^2.
+\]
+Thus the robust theorem gives an explicit endpoint for simultaneous inverse
+Littlewood--Offord basis approximation.
+
+\section{Relation to previous work}
+
+The cross-intersection formulation is due to Hambardzumyan, Lovett, and
+Shirley \cite{HambardzumyanLovettShirley}.  Their theorem is an equivalence,
+not a solution for the product family considered here.  The general
+$2^{-O(\sqrt r)}$ rectangle bound of Sudakov--Tomon applies, but is
+exponentially weaker than Theorem~\ref{thm:product} when $r\asymp d$
+\cite{SudakovTomon}.
+
+Kupavskii--Weltge prove
+$|\cA||\cB|\le(d+1)2^d$ for full-span binary scalar products, and
+Kupavskii--Tsarev prove sharp near-extremal stability
+\cite{KupavskiiWeltge,KupavskiiTsarev}.  Those are absolute cardinality
+statements.  They do not yield a relative monochromatic rectangle inside a
+given exponentially sparse product family.
+
+Rao--Yehudayoff prove powerful anti-concentration results for large cube
+families and certain finite-field structured distributions
+\cite{RaoYehudayoff}.  Nguyen proves an inverse Littlewood--Offord theorem for
+the complete half layer \cite{NguyenCombinatorial}.  These results concern
+ambient concentration and do not directly give Theorem~\ref{thm:master} for
+an arbitrary sparse right family.
+
+There is also a substantial Erd\H{o}s--Ko--Rado literature for direct
+products of uniform families.  For example, Yao--Lv--Wang determine extremal
+$t$-intersecting subfamilies in a multipart setting \cite{YaoLvWang}.  Those
+results impose the one-family condition $|A\cap A'|\ge t$.  They do not treat
+a cross pair with a prescribed full product on one side, two adjacent
+intersection values, or the resulting rank-sensitive communication protocol.
+
+The one-block local classification in
+Theorem~\ref{thm:interior-product} is consistent with the Boolean degree-one
+theorem of Filmus--Ihringer \cite{FilmusIhringer}.  Their paper does not state
+the product communication theorem, the rank-sensitive support argument, or
+the weight-one universality boundary.  Accordingly, novelty here rests on
+those global and communication-complexity components, not on re-claiming the
+single-scheme degree-one classification.
+
+Likewise, Filmus--Ihringer's multislice classification
+\cite[Lemma~8.1]{FilmusIhringer} is the local input to
+Theorem~\ref{thm:multislice}.  The product assembly, centered-rank estimate,
+rank-sensitive protocol, and count-one universality boundary are the claims
+made here.
+
+The low-degree slice theorems use published results of Filmus--Ihringer,
+Chiarelli--Hatami--Saks, Midrijanis, Filmus, and
+Dafni--Filmus--Lifshitz--Lindzey--Vinyals
+\cite{FilmusIhringerJunta,ChiarelliHatamiSaks,Midrijanis,
+FilmusJuntaThreshold,DafniFilmusLifshitzLindzeyVinyals}.  In particular, the
+last authors already prove polynomial relations between degree and query
+complexity on slices.  None of these inputs is claimed as new.  The
+contribution here is the row-space support pooling, synchronization of
+non-unique slice supports, symmetric-tree canonicalization, and the resulting
+rank-sensitive communication theorems, including the bounded-alphabet product
+and multislice extensions.  The remaining quantitative gap is
+between the sharp $2s$ threshold with unspecified dependence, the polynomial
+$144s^4$ query regime, and the sharper $s$-dependence in the $C^s$
+cube-extension regime.
+
+Concept-class evaluation is used by Feldman--Xiao to relate randomized
+one-way communication to differentially private learning
+\cite{FeldmanXiao}.  Mande--Sanyal--Sherif relate one-way communication and
+non-adaptive decision trees for functions composed with fixed gadgets
+\cite{MandeSanyalSherif}.  These works do not state a deterministic
+real-rank-sensitive bounded-answer evaluation theorem.  Theorem
+\ref{thm:rank-pooled-query} instead applies directly to an arbitrary Boolean
+evaluation matrix and replaces the ambient coordinate cost by its real row
+rank.  This targeted comparison is still not a substitute for an independent
+priority search in learning theory.
+
+The sparse-column extension uses standard constant-leverage sampling on a
+transitive invariant subspace, matrix Chernoff, and the Gross--Nesme
+without-replacement comparison \cite{Tropp,GrossNesme}.  Those concentration
+ingredients are not new.  The claim here is the unisolvent rank-lifting step
+and its combination with Theorem~\ref{thm:rank-pooled-query}, yielding one
+sparse column family that works simultaneously for all eligible Boolean row
+families.  The twice-degree certificate $f(f-1)$ additionally removes the
+need to assume that rows are Boolean outside the sparse family; this is the
+step used in Theorem~\ref{thm:quadratic-column-hls}.
+
+Amireddy--Behera--Srinivasan--Sudan--Willumsgaard recently construct
+constant-query randomized low-degree tests on balanced Boolean slices
+\cite{AmireddyBeheraSrinivasanSudanWillumsgaard}.  Their goal is to
+distinguish low degree from functions far from low degree using fresh random
+oracle queries.  Theorems~\ref{thm:booleanity-certifying-transfer} and
+\ref{thm:quadratic-column-hls} instead use one fixed minimal interpolation
+set, certify exact Booleanity for every affine row simultaneously, and derive
+a deterministic real-rank communication protocol.
+
+Maximal rank and diagonal forms for the full pair-versus-$k$-set inclusion
+matrix are classical \cite{GottliebIncidence,WilsonIncidence}.  Those results
+imply that some square full-rank minor exists.  Theorem
+\ref{thm:explicit-cross} identifies a specific base/single-swap/two-double-star
+minor and proves it nonsingular by direct coefficient elimination.  The
+incidence-rank fact itself is not a novelty claim; candidate new content is
+the explicit sparse minor and its universal adjacent-two-value communication
+application.
+
+The entropy estimate used here is elementary.  It is compatible with the
+standard discrete entropy--variance inequality obtained by adding independent
+uniform noise and applying Gaussian maximal entropy
+\cite{GavalakisKontoyiannis}.
+
+Targeted searches found no prior theorem with the product hypothesis
+\eqref{eq:product-family} and relative bound \eqref{eq:master-bound}, nor a
+dimension-free rectangle theorem parameterized by Boolean tube radius and
+integer-generator entropy.  This is not a substitute for an independent
+publication-level novelty audit.
+
+\section{Limitations and open problems}
+
+The spectral--lattice hypotheses are sufficient, not necessary.  An
+irrational low-mode space can have useful Boolean structure not captured by
+integer generators.  Conversely, a rational approximation may have poor
+Boolean margin or prohibitively large height.  The robust theorem isolates
+the remaining inverse task: produce a projector-close rational space with
+simultaneously controlled Boolean margin and arithmetic entropy, or extract a
+coordinate/equality/code block directly.
+
+The product-Johnson theorem has a full logarithmic one-way protocol because
+its rows admit the exact coordinate/complement classification.  In contrast,
+the general spectral--lattice theorem is presently only a one-rectangle
+theorem: arbitrary recursive restrictions need not preserve its covariance,
+tube-radius, or generator-entropy hypotheses.
+
+The most valuable next directions are:
+\begin{enumerate}
+\item reduce the polynomial depth condition $144s^4$ toward the optimal
+$2s$ junta threshold while retaining explicit dependence on $s$;
+\item unequal and near-boundary product layers with sharp tube profiles;
+\item random and pseudorandom thinning inside each block;
+\item a relative inverse theorem producing the rational data required by
+Theorem~\ref{thm:robust};
+\item an external comparison with association-scheme and extremal product
+theorems not indexed by the terminology used here.
+\end{enumerate}
+
+\section{Machine verification}
+
+The accompanying reviewer repository contains a curated 18-module Lean 4.22
+core, reduced from the broader historical research development.  It contains
+no \texttt{sorry}, \texttt{admit}, project-defined axioms, compiled objects,
+or cached dependencies.  The retained modules formalize the finite cores
+needed for the headline results:
+\begin{itemize}
+\item two-point variance and the explicit rank-at-most-$d+1$ factorization;
+\item unisolvent restriction, affine support pairing, and rank-basis support
+pooling;
+\item uniform-layer and product-Johnson range/kernel lemmas;
+\item the short-side, low-density, and global six-coordinate sharp $2/5$
+polynomials, including the unique $J(6,3)$ equality and the $k=2$ boundary;
+\item the deterministic covariance-gap medium-row contradiction and the
+Sylvester--Hadamard threshold.
+\end{itemize}
+The probabilistic sampling inputs (matrix Chernoff and VC), the projection
+DPP, published junta and query theorems, and the complete protocol wrapper
+remain conventional paper proofs.  The exact coverage boundary is recorded in
+\nolinkurl{formal/FORMALIZATION_MANIFEST.md}.
+
+Five assertion-based Python suites provide independent finite regression.
+The current checks include 2,533,728 product-Johnson row--column pairs, 5,400
+general product protocol cases, 1,000 product-multislice cases, 105,747 slice
+support-intersection instances, 16,952 symmetric-tree instances, 155,155
+hypergeometric parameter triples, 2,047,045 adjacent intervals, 123,750
+six-coordinate certificate parameters, 9,241,290 affine evaluations, and six
+Sylvester--Hadamard designs.  The sharp audit finds the unique normalized
+$2/5$ equality $(n,k,|A|,a)=(6,3,3,1)$.
+
+The repository provides one-command targets for the Lean build, all Python
+checks, PDF generation, and a minimal arXiv source archive.  Historical
+Fourier, affine-section, extraction, and exploratory modules are deliberately
+omitted because they are not dependencies of the reviewer-facing claims.
+
+\bibliographystyle{alpha}
+\bibliography{references}
+
+\end{document}
