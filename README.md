@@ -77,17 +77,20 @@ The Lean build downloads the pinned Mathlib revision on its first standard
 `lake` run. See `docs/REPRODUCIBILITY.md` for the cached local build used to
 validate this repository.
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22120315.svg)](https://doi.org/10.5281/zenodo.22120315)
+
 ## Citing this repository
 
 This GitHub repository is the versioned source archive (paper, Lean core,
-and verification scripts). After the first GitHub Release is harvested by
-[Zenodo](https://zenodo.org), cite the version DOI that Zenodo mints. Until
-that DOI exists, cite the GitHub URL
-https://github.com/CGandGameEngineLearner/log-rank-spectral-hls
-and the tagged release `v1.0.0`.
+and verification scripts). Cite the Zenodo version DOI for `v1.0.0`:
 
-The scholarly preprint, when posted, should be cited from arXiv (`cs.CC`),
-not from this software DOI.
+Li, J. (2026). Sharp Two-Point Escape and Logarithmic Communication for
+Johnson Products and Sparse Columns (v1.0.0). Zenodo.
+https://doi.org/10.5281/zenodo.22120315
+
+The concept DOI https://doi.org/10.5281/zenodo.22120314 always resolves to
+the latest archived version. The scholarly preprint, when posted, should be
+cited from arXiv (`cs.CC`), not from this software DOI.
 
 ## Submission gate
 
