@@ -8,8 +8,11 @@ license: CC-BY-4.0
 repository-code: "https://github.com/CGandGameEngineLearner/log-rank-spectral-hls"
 identifiers:
   - type: doi
+    value: 10.5281/zenodo.22126281
+    description: This version (v1.0.1)
+  - type: doi
     value: 10.5281/zenodo.22120314
-    description: All versions (resolves to the latest)
+    description: All versions
 authors:
   - family-names: Li
     given-names: JinWen

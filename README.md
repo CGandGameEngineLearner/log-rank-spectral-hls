@@ -77,21 +77,20 @@ The Lean build downloads the pinned Mathlib revision on its first standard
 `lake` run. See `docs/REPRODUCIBILITY.md` for the cached local build used to
 validate this repository.
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22120314.svg)](https://doi.org/10.5281/zenodo.22120314)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22126281.svg)](https://doi.org/10.5281/zenodo.22126281)
 
 ## Citing this repository
 
 This GitHub repository is the versioned source archive (paper, Lean core,
-and verification scripts). Cite the latest archived snapshot via the
-concept DOI, which always resolves to the current version:
+and verification scripts). Cite the Zenodo version DOI for `v1.0.1`:
 
 Li, J. (2026). Sharp Two-Point Escape and Logarithmic Communication for
 Johnson Products and Sparse Columns (v1.0.1). Zenodo.
-https://doi.org/10.5281/zenodo.22120314
+https://doi.org/10.5281/zenodo.22126281
 
-The version DOI for `v1.0.0` is https://doi.org/10.5281/zenodo.22120315.
-The scholarly preprint, when posted, should be cited from arXiv (`cs.CC`),
-not from this software DOI.
+The concept DOI https://doi.org/10.5281/zenodo.22120314 always resolves to
+the latest archived version. The scholarly preprint, when posted, should be
+cited from arXiv (`cs.CC`), not from this software DOI.
 
 ## Submission gate
 
