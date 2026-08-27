@@ -84,6 +84,17 @@ Lianna Hambardzumyan, Shachar Lovett, and Morgan Shirley.
 \newblock The log-rank conjecture: New equivalent formulations.
 \newblock {\em arXiv preprint arXiv:2510.02583}, 2025.
 
+\bibitem[HS05]{HushScovel}
+Don Hush and Clint Scovel.
+\newblock Concentration of the hypergeometric distribution.
+\newblock {\em Statistics \& Probability Letters}, 75(2):127--132, 2005.
+
+\bibitem[KS06]{KeevashSudakovRestricted}
+Peter Keevash and Benny Sudakov.
+\newblock On a restricted cross-intersection problem.
+\newblock {\em Journal of Combinatorial Theory, Series A}, 113(8):1536--1542,
+  2006.
+
 \bibitem[KT26]{KupavskiiTsarev}
 Andrey Kupavskii and Dmitry Tsarev.
 \newblock Stability for binary scalar products.
@@ -118,6 +129,11 @@ Hoi Nguyen and Van Vu.
 Anup Rao and Amir Yehudayoff.
 \newblock Anti-concentration and the exact gap-hamming problem.
 \newblock {\em arXiv preprint arXiv:2201.01374}, 2022.
+
+\bibitem[Sga99]{SgallRestricted}
+Ji\v{r}\'{\i} Sgall.
+\newblock Bounds on pairs of families with restricted intersections.
+\newblock {\em Combinatorica}, 19(4):555--566, 1999.
 
 \bibitem[ST25]{SudakovTomon}
 Benny Sudakov and Istv\'{a}n Tomon.

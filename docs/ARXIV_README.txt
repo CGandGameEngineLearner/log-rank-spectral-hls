@@ -1,5 +1,9 @@
 This archive contains the LaTeX source for the manuscript.
 
+Intended arXiv categories:
+  primary     cs.CC
+  cross-list  cs.DM, math.CO
+
 Compile sequence:
   pdflatex main.tex
   bibtex main

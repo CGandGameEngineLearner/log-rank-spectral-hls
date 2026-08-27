@@ -7,30 +7,36 @@ namespace AffineSectionLogRank
 /-- The kernel of evaluation on a complete product of nontrivial uniform
 layers has block-constant coordinate coefficients. -/
 theorem productLayerKernel_block_constant
-    {ι α : Type*} [Fintype ι] [DecidableEq ι]
-    [Fintype α] [DecidableEq α]
-    (k : ℕ) (weight : ι → α → ℝ) (constant : ℝ)
-    (hkpos : 1 ≤ k) (hklt : k < Fintype.card α)
-    (hzero : ∀ column : ι → Finset α,
-      (∀ i, (column i).card = k) →
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {α : ι → Type*} [∀ i, Fintype (α i)]
+    (k : ι → ℕ) (weight : ∀ i, α i → ℝ) (constant : ℝ)
+    (hkpos : ∀ i, 1 ≤ k i) (hklt : ∀ i, k i < Fintype.card (α i))
+    (hzero : ∀ column : (i : ι) → Finset (α i),
+      (∀ i, (column i).card = k i) →
       constant + ∑ i, ∑ x ∈ column i, weight i x = 0) :
     ∀ i x y, weight i x = weight i y := by
   classical
-  have hkcard : k ≤ (Finset.univ : Finset α).card := by
-    simpa using hklt.le
-  obtain ⟨U, hUsub, hUcard⟩ := Finset.exists_subset_card_eq hkcard
+  have hkcard (i : ι) :
+      k i ≤ (Finset.univ : Finset (α i)).card := by
+    simpa using (hklt i).le
+  let U (i : ι) : Finset (α i) :=
+    Classical.choose (Finset.exists_subset_card_eq (hkcard i))
+  have hUcard (i : ι) : (U i).card = k i :=
+    (Classical.choose_spec (Finset.exists_subset_card_eq (hkcard i))).2
   intro i
-  apply constant_of_sum_eq_on_powersetCard k (weight i)
-    (∑ x ∈ U, weight i x) hkpos hklt
+  apply constant_of_sum_eq_on_powersetCard (k i) (weight i)
+    (∑ x ∈ U i, weight i x) (hkpos i) (hklt i)
   intro S hScard
-  let columnS : ι → Finset α := fun j => if j = i then S else U
-  let columnU : ι → Finset α := fun _ => U
-  have hcardS : ∀ j, (columnS j).card = k := by
+  let columnS : (j : ι) → Finset (α j) := fun j =>
+    if hji : j = i then hji.symm ▸ S else U j
+  let columnU : (j : ι) → Finset (α j) := fun j => U j
+  have hcardS : ∀ j, (columnS j).card = k j := by
     intro j
     by_cases hji : j = i
-    · simp [columnS, hji, hScard]
+    · subst j
+      simp [columnS, hScard]
     · simp [columnS, hji, hUcard]
-  have hcardU : ∀ j, (columnU j).card = k := by
+  have hcardU : ∀ j, (columnU j).card = k j := by
     intro j
     simp [columnU, hUcard]
   have hzS := hzero columnS hcardS
@@ -39,7 +45,7 @@ theorem productLayerKernel_block_constant
       (∑ j ∈ (Finset.univ : Finset ι).erase i,
         ∑ x ∈ columnS j, weight j x) =
       ∑ j ∈ (Finset.univ : Finset ι).erase i,
-        ∑ x ∈ U, weight j x := by
+        ∑ x ∈ U j, weight j x := by
     apply Finset.sum_congr rfl
     intro j hj
     have hji : j ≠ i := (Finset.mem_erase.mp hj).1
@@ -48,7 +54,7 @@ theorem productLayerKernel_block_constant
       (∑ j, ∑ x ∈ columnS j, weight j x) =
         (∑ x ∈ S, weight i x) +
           ∑ j ∈ (Finset.univ : Finset ι).erase i,
-            ∑ x ∈ U, weight j x := by
+            ∑ x ∈ U j, weight j x := by
     calc
       (∑ j, ∑ x ∈ columnS j, weight j x) =
           (∑ x ∈ columnS i, weight i x) +
@@ -60,9 +66,9 @@ theorem productLayerKernel_block_constant
       _ = _ := by rw [heraseS]; simp [columnS]
   have hsumU :
       (∑ j, ∑ x ∈ columnU j, weight j x) =
-        (∑ x ∈ U, weight i x) +
+        (∑ x ∈ U i, weight i x) +
           ∑ j ∈ (Finset.univ : Finset ι).erase i,
-            ∑ x ∈ U, weight j x := by
+            ∑ x ∈ U j, weight j x := by
     calc
       (∑ j, ∑ x ∈ columnU j, weight j x) =
           (∑ x ∈ columnU i, weight i x) +

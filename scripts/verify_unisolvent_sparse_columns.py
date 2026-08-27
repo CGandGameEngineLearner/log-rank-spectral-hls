@@ -311,6 +311,77 @@ def check_explicit_quadratic_cross() -> tuple[int, int]:
     return parameter_checks, matrix_entries
 
 
+def check_quadratic_cross_actual_rank_protocol() -> tuple[int, int]:
+    """Audit the complete depth-one wrapper using actual restricted rank."""
+    parameter_checks = 0
+    protocol_checks = 0
+    rng = random.Random(0x25A5)
+    for n in range(4, 9):
+        for k in range(2, n - 1):
+            family = explicit_quadratic_cross(n, k)
+            coordinates = [
+                [int(point >> coordinate & 1) for point in family]
+                for coordinate in range(n)
+            ]
+            rows_by_root: dict[int, list[tuple[list[int], int | None]]] = {}
+            for row_set in range(1 << n):
+                intersections = [(row_set & point).bit_count() for point in family]
+                low, high = min(intersections), max(intersections)
+                for root in {low, high - 1}:
+                    row = [value - root for value in intersections]
+                    if not all(value in (0, 1) for value in row):
+                        continue
+                    coordinate: int | None = None
+                    if len(set(row)) > 1:
+                        for index, query in enumerate(coordinates):
+                            if row == query or row == [1 - value for value in query]:
+                                coordinate = index
+                                break
+                        assert coordinate is not None
+                    rows_by_root.setdefault(root, []).append((row, coordinate))
+
+            for rows in rows_by_root.values():
+                samples = [rows]
+                samples.extend(
+                    rng.sample(rows, rng.randint(1, len(rows))) for _ in range(50)
+                )
+                for sample in samples:
+                    matrix = [row for row, _ in sample]
+                    rank = rank_mod(matrix)
+                    used = {coordinate for _, coordinate in sample if coordinate is not None}
+                    assert len(used) <= rank + 1
+                    communication = 0 if not used else math.ceil(math.log2(len(used))) + 1
+                    assert communication <= math.ceil(math.log2(rank + 1)) + 1
+
+                    groups: dict[int | None, list[list[int]]] = {}
+                    for row, coordinate in sample:
+                        groups.setdefault(coordinate, []).append(row)
+                    group_coordinate, retained = max(
+                        groups.items(), key=lambda item: len(item[1])
+                    )
+                    if group_coordinate is None:
+                        retained_rows = max(
+                            sum(not any(row) for row in retained),
+                            sum(all(row) for row in retained),
+                        )
+                        retained_columns = len(family)
+                    else:
+                        query = coordinates[group_coordinate]
+                        retained_rows = max(
+                            sum(row == query for row in retained),
+                            sum(row != query for row in retained),
+                        )
+                        retained_columns = max(sum(query), len(query) - sum(query))
+                    density_numerator = retained_rows * retained_columns
+                    density_denominator = len(sample) * len(family)
+                    assert (
+                        4 * (rank + 1) * density_numerator >= density_denominator
+                    )
+                    protocol_checks += 1
+            parameter_checks += 1
+    return parameter_checks, protocol_checks
+
+
 def explicit_linear_anchor(n: int, k: int) -> list[int]:
     inside = set(range(k))
     outside = set(range(k, n))
@@ -469,6 +540,12 @@ def check_quadratic_hypergeometric_gap() -> tuple[
                 for a in range(lower - 1, upper + 1):
                     outside = denominator - masses.get(a, 0) - masses.get(a + 1, 0)
                     assert outside * 16 * n * n >= denominator * short_side * short_side
+                    # Independently audit the manuscript's sharp 2/5 bound,
+                    # not only the older p^2/16 quadratic lower bound.
+                    assert (
+                        5 * outside * n * n
+                        >= 2 * denominator * short_side * short_side
+                    )
                     # Track the exact numerator/denominator of the smallest
                     # ratio to the natural quadratic scale.
                     ratio_num = outside * n * n
@@ -614,6 +691,9 @@ def main() -> None:
         check_sparse_booleanity_certification()
     )
     cross_parameters, cross_entries = check_explicit_quadratic_cross()
+    sparse_protocol_parameters, sparse_protocol_checks = (
+        check_quadratic_cross_actual_rank_protocol()
+    )
     anchor_parameters, fiber_parameters, fiber_rows, anchor_entries = (
         check_linear_anchor_and_four_fiber()
     )
@@ -664,6 +744,10 @@ def main() -> None:
     print(
         "explicit quadratic cross checks: "
         f"{cross_parameters} parameters, {cross_entries} incidence entries"
+    )
+    print(
+        "quadratic-cross actual-rank protocol checks: "
+        f"{sparse_protocol_parameters} parameters, {sparse_protocol_checks} row families"
     )
     print(
         "linear rank-anchor checks: "

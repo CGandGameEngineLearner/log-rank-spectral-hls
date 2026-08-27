@@ -50,6 +50,30 @@ theorem threeMarkedCentralPolynomial_eq_zero_iff
     rw [hq0, ht0]
     norm_num
 
+/-- At the exceptional short-side boundary `k = 2`, the polynomial agrees
+term-by-term with the manuscript formula
+`F(2,t) = -48 + 62 t^2 + 35 t^3 + 5 t^4`. -/
+theorem threeMarkedCentralPolynomial_two_formula (t : ℝ) :
+    threeMarkedCentralPolynomial 2 t =
+      -48 + 62 * t ^ 2 + 35 * t ^ 3 + 5 * t ^ 4 := by
+  simp [threeMarkedCentralPolynomial]
+  ring
+
+/-- The manuscript's `k = 2` short-edge branch: `t ≥ 2` makes the central
+polynomial strictly positive. -/
+theorem threeMarkedCentralPolynomial_two_pos
+    (t : ℝ) (ht : 2 ≤ t) :
+    0 < threeMarkedCentralPolynomial 2 t := by
+  rw [threeMarkedCentralPolynomial_two_formula]
+  have hshift :
+      -48 + 62 * t ^ 2 + 35 * t ^ 3 + 5 * t ^ 4 =
+        5 * (t - 2) ^ 4 + 75 * (t - 2) ^ 3 +
+        392 * (t - 2) ^ 2 + 828 * (t - 2) + 560 := by
+    ring
+  rw [hshift]
+  have hnonneg : 0 ≤ t - 2 := by linarith
+  positivity
+
 /-- Cleared-denominator polynomial for the other potentially minimal tail. -/
 def threeMarkedOtherPolynomial (k t : ℝ) : ℝ :=
   16 * k * (k - 1) * (2 * k - 1) +
