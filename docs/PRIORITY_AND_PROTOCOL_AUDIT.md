@@ -32,7 +32,8 @@ The search covered the following neighboring lines.
 - Hambardzumyan--Lovett--Shirley formulate the cross-intersection
   equivalence, including the adjacent-value special case, but do not prove
   this local hypergeometric constant:
-  https://arxiv.org/abs/2510.02583
+  https://doi.org/10.4230/LIPIcs.CCC.2026.7
+  (preprint: https://arxiv.org/abs/2510.02583)
 
 No exact predecessor for the normalized 2/5 inequality or its unique
 equality case was found in these searches. The manuscript now calls it a

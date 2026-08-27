@@ -47,7 +47,8 @@ Yuval Filmus and Ferdinand Ihringer.
 
 \bibitem[Fil16]{FilmusOrthogonal}
 Yuval Filmus.
-\newblock Orthogonal basis for functions over a slice of the boolean hypercube.
+\newblock An orthogonal basis for functions over a slice of the boolean
+  hypercube.
 \newblock {\em Electronic Journal of Combinatorics}, 23(1):P1.23, 2016.
 
 \bibitem[Fil22]{FilmusJuntaThreshold}
@@ -55,11 +56,12 @@ Yuval Filmus.
 \newblock Junta threshold for low degree boolean functions on the slice.
 \newblock {\em arXiv preprint arXiv:2203.04760}, 2022.
 
-\bibitem[FX14]{FeldmanXiao}
+\bibitem[FX15]{FeldmanXiao}
 Vitaly Feldman and David Xiao.
 \newblock Sample complexity bounds on differentially private learning via
   communication complexity.
-\newblock {\em arXiv preprint arXiv:1402.6278}, 2014.
+\newblock {\em SIAM Journal on Computing}, 44(6):1740--1764, 2015.
+\newblock Preliminary version in COLT 2014.
 
 \bibitem[GK24]{GavalakisKontoyiannis}
 Lampros Gavalakis and Ioannis Kontoyiannis.
@@ -79,10 +81,13 @@ D.~H. Gottlieb.
 \newblock {\em Proceedings of the American Mathematical Society},
   17(6):1233--1237, 1966.
 
-\bibitem[HLS25]{HambardzumyanLovettShirley}
+\bibitem[HLS26]{HambardzumyanLovettShirley}
 Lianna Hambardzumyan, Shachar Lovett, and Morgan Shirley.
 \newblock The log-rank conjecture: New equivalent formulations.
-\newblock {\em arXiv preprint arXiv:2510.02583}, 2025.
+\newblock In {\em 41st Computational Complexity Conference (CCC 2026)}, volume
+  383 of {\em Leibniz International Proceedings in Informatics (LIPIcs)}, pages
+  7:1--7:9, 2026.
+\newblock Preprint: arXiv:2510.02583.
 
 \bibitem[HS05]{HushScovel}
 Don Hush and Clint Scovel.
@@ -110,15 +115,18 @@ Gatis Midrijanis.
 \newblock Exact quantum query complexity for total boolean functions.
 \newblock {\em arXiv preprint quant-ph/0403168}, 2004.
 
-\bibitem[MSS21]{MandeSanyalSherif}
+\bibitem[MSS22]{MandeSanyalSherif}
 Nikhil~S. Mande, Swagato Sanyal, and Suhail Sherif.
 \newblock One-way communication complexity and non-adaptive decision trees.
-\newblock {\em arXiv preprint arXiv:2105.01963}, 2021.
+\newblock In {\em 39th International Symposium on Theoretical Aspects of
+  Computer Science (STACS 2022)}, volume 219 of {\em Leibniz International
+  Proceedings in Informatics (LIPIcs)}, pages 49:1--49:24, 2022.
+\newblock Preprint: arXiv:2105.01963.
 
 \bibitem[Ngu13]{NguyenCombinatorial}
 Hoi~H. Nguyen.
 \newblock On the singularity of random combinatorial matrices.
-\newblock {\em SIAM Journal on Discrete Mathematics}, 27(1):32--53, 2013.
+\newblock {\em SIAM Journal on Discrete Mathematics}, 27(1):447--458, 2013.
 
 \bibitem[NV11]{NguyenVu}
 Hoi Nguyen and Van Vu.
@@ -127,8 +135,9 @@ Hoi Nguyen and Van Vu.
 
 \bibitem[RY22]{RaoYehudayoff}
 Anup Rao and Amir Yehudayoff.
-\newblock Anti-concentration and the exact gap-hamming problem.
-\newblock {\em arXiv preprint arXiv:2201.01374}, 2022.
+\newblock Anticoncentration and the exact gap-hamming problem.
+\newblock {\em SIAM Journal on Discrete Mathematics}, 36(2):1071--1092, 2022.
+\newblock arXiv:2201.01374.
 
 \bibitem[Sga99]{SgallRestricted}
 Ji\v{r}\'{\i} Sgall.
@@ -138,7 +147,7 @@ Ji\v{r}\'{\i} Sgall.
 \bibitem[ST25]{SudakovTomon}
 Benny Sudakov and Istv\'{a}n Tomon.
 \newblock Matrix discrepancy and the log-rank conjecture.
-\newblock {\em Mathematical Programming}, 2025.
+\newblock {\em Mathematical Programming}, 212:567--579, 2025.
 \newblock arXiv:2311.18524.
 
 \bibitem[Tro12]{Tropp}
