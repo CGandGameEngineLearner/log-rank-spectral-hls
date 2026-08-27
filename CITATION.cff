@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: If you use this repository, please cite it as below.
+type: software
+title: "Sharp Two-Point Escape and Logarithmic Communication for Johnson Products and Sparse Columns"
+version: "1.0.0"
+date-released: "2026-08-27"
+license: CC-BY-4.0
+repository-code: "https://github.com/CGandGameEngineLearner/log-rank-spectral-hls"
+authors:
+  - family-names: Li
+    given-names: JinWen
+    affiliation: SouthWest Petroleum University
+    email: lifesize1@163.com
+keywords:
+  - communication complexity
+  - log-rank conjecture
+  - Johnson scheme
+  - Lean
+abstract: >-
+  Reviewer and source repository for restricted-column theorems in the
+  Hambardzumyan–Lovett–Shirley two-level formulation of the log-rank
+  conjecture: a sharp hypergeometric two-point escape bound, logarithmic
+  communication for interior Johnson products, and sparse Johnson-column
+  protocols. These results do not prove the general log-rank conjecture.

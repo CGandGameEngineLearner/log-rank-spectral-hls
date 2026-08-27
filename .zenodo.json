@@ -1,0 +1,20 @@
+{
+  "title": "Sharp Two-Point Escape and Logarithmic Communication for Johnson Products and Sparse Columns",
+  "upload_type": "software",
+  "publication_date": "2026-08-27",
+  "creators": [
+    {
+      "name": "Li, JinWen",
+      "affiliation": "SouthWest Petroleum University"
+    }
+  ],
+  "description": "<p>Reviewer and source repository for the manuscript <em>Sharp Two-Point Escape and Logarithmic Communication for Johnson Products and Sparse Columns</em>.</p><p>The archive contains the LaTeX source, a compiled PDF, a curated Lean 4 core, and deterministic Python audits. The results are restricted-column theorems for the HLS two-level formulation of the log-rank conjecture. They do not prove the general conjecture or improve the universal O(sqrt(r)) communication bound.</p>",
+  "keywords": [
+    "communication complexity",
+    "log-rank conjecture",
+    "Johnson scheme",
+    "Lean"
+  ],
+  "license": "CC-BY-4.0",
+  "access_right": "open"
+}
